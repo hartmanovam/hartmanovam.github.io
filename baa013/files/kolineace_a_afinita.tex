@@ -1,0 +1,161 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.6cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries\underline{Středová kolineace a osová afinita}}\\[4pt]
+{\Large\bfseries\underline{mezi dvěma rovinami}}
+\end{center}
+
+\subsection*{\underline{Středová kolineace} je dána:}
+\begin{itemize}[nosep]
+\item středem kolineace \dotfill\ $S$
+\item osou kolineace \dotfill\ $o$
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1, every node/.style={font=\small}]
+\coordinate (S) at (3.120,6.560);
+\coordinate (A) at (2.832,2.640); \coordinate (B) at (4.432,3.520); \coordinate (C) at (5.168,4.240);
+\coordinate (A') at (2.560,1.760); \coordinate (B') at (5.117,1.933); \coordinate (C') at (6.364,2.885);
+\coordinate (X) at (1.046,1.658); \coordinate (Y) at (0.778,1.233);
+% roviny
+\draw (1.27,2.02) -- (3.8,6.05) -- (8.0,6.4) -- (5.47,2.37) -- cycle;
+\draw (0,0) -- (2.4,3.8) -- (8.4,3.0) -- (6.0,-0.8) -- cycle;
+\node at (7.4,6.0) {$\rho$};
+\node at (7.9,2.7) {$\pi$};
+% osa
+\draw[thick] (-0.3,-0.48) -- (4.6,7.3);
+\node[below left] at (-0.3,-0.48) {$o$};
+% trojúhelníky
+\fill[gray!35] (A) -- (B) -- (C) -- cycle;
+\fill[gray!35] (A') -- (B') -- (C') -- cycle;
+\draw (A) -- (B) -- (C) -- cycle;
+\draw (A') -- (B') -- (C') -- cycle;
+% přímky
+\draw[thick] (X) -- ($(X)!1.35!(B)$) node[right] {$p$};
+\draw[thick] (Y) -- ($(Y)!1.2!(C)$) node[right] {$q$};
+\draw[thick] (X) -- ($(X)!1.25!(B')$) node[right] {$p'$};
+\draw[thick] (Y) -- ($(Y)!1.12!(C')$) node[right] {$q'$};
+% promítací paprsky
+\draw[dashed] (S) -- (A'); \draw[dashed] (S) -- (B'); \draw[dashed] (S) -- (C');
+% body
+\foreach \P/\pos in {S/above, A/above left, B/below right, C/above, A'/below left, B'/below, C'/above right} {
+  \fill (\P) circle (1.2pt); \node[\pos] at (\P) {$\P$};
+}
+\fill (X) circle (1.2pt); \node[left] at (X) {$X'=X$};
+\end{tikzpicture}
+\end{center}
+
+\hfill\begin{tabular}{l}
+$p$, $p'$ jsou ve vztahu středové kolineace\\
+$ABC$, $A'B'C'$ jsou ve vztahu středové kolineace
+\end{tabular}
+
+\begin{description}[nosep, leftmargin=2em, labelwidth=1.5em]
+\item[V:] Středem $S$ procházejí spojnice bodů, které si v kolineaci odpovídají.
+\item[V:] Na ose $o$ se protínají přímky, které si v kolineaci odpovídají. \hfill $o=\rho\cap\pi$
+\item[$\bullet$] $p\cap p'=X=X'$; \quad $X=X'$ \dots\ samodružný bod
+\end{description}
+
+\newpage
+\subsection*{\underline{Osová afinita} je dána:}
+\begin{itemize}[nosep]
+\item směrem afinity \dotfill\ $\vec s$
+\item osou afinity \dotfill\ $o$
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1, every node/.style={font=\small}]
+\coordinate (A) at (4.500,1.950); \coordinate (B) at (5.925,1.125); \coordinate (C) at (4.770,0.450);
+\coordinate (A') at (2.925,-1.875); \coordinate (B') at (5.016,-1.082); \coordinate (C') at (4.407,-0.433);
+\coordinate (X) at (7.868,0); \coordinate (Y) at (4.0,0);
+\coordinate (s) at (-1.575,-3.825);
+% roviny
+\draw (3,0) -- (9,0) -- (7.2,3.4) -- (1.2,3.4) -- cycle;
+\draw (1.8,0) -- (8.4,0) -- (6.6,-3.6) -- (0,-3.6) -- cycle;
+\node at (1.9,3.0) {$\rho$};
+\node at (0.7,-3.3) {$\pi$};
+% osa
+\draw[thick] (-0.3,0) -- (9.6,0) node[right] {$o$};
+% směr afinity
+\draw[-{Stealth}, thick] (0.6,2.4) -- ++(-0.4725,-1.1475) node[midway, left] {$\vec s$};
+% trojúhelníky
+\fill[gray!35] (A) -- (B) -- (C) -- cycle;
+\fill[gray!35] (A') -- (B') -- (C') -- cycle;
+\draw (A) -- (B) -- (C) -- cycle;
+\draw (A') -- (B') -- (C') -- cycle;
+% přímky
+\draw[thick] ($(X)!1.6!(A)$) node[left] {$a$} -- (X);
+\draw[thick] ($(X)!1.15!(A')$) node[left] {$a'$} -- (X);
+\draw[thick] (Y) -- ($(Y)!1.5!(B)$) node[right] {$b$};
+\draw[thick] (C') -- ($(Y)!1.5!(B')$) node[right] {$b'$};
+% směrové přímky
+\draw[dashed] (4.846,2.792) -- (2.216,-3.596);
+\draw[dashed] (6.271,1.966) -- (3.641,-4.421);
+\draw[dashed] (5.116,1.292) -- (2.486,-5.096);
+% body
+\foreach \P/\pos in {A/above left, B/above right, C/below left, A'/left, B'/right, C'/left} {
+  \fill (\P) circle (1.2pt); \node[\pos] at (\P) {$\P$};
+}
+\fill (X) circle (1.2pt); \node[below] at (X) {$X=X'$};
+\end{tikzpicture}
+\end{center}
+
+\hfill\begin{tabular}{l}
+$a$, $a'$; $b$, $b'$ jsou ve vztahu osové afinity\\
+$ABC$, $A'B'C'$ jsou ve vztahu osové afinity
+\end{tabular}
+
+\begin{description}[nosep, leftmargin=2em, labelwidth=1.5em]
+\item[V:] Spojnice odpovídajících si bodů mají směr afinity.
+\item[V:] Odpovídající si přímky se protínají na ose afinity. \hfill $o=\rho\cap\pi$
+\end{description}
+
+\end{document}

@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[a4paper,landscape,margin=1.2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+\usepackage{array}
+\renewcommand{\arraystretch}{1}
+
+\newcommand{\pop}[1]{{\sffamily\scriptsize #1\par}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcommand{\tab}{%
+\begin{tabular}{|C{5.4cm}|C{7.1cm}|}
+\hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int x^n\dx=\frac{x^{n+1}}{n+1}+c\ \ ;\ n\ne-1$ & \\ \cline{1-1}
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int\frac1x\dx=\ln|x|+c$ & \\ \cline{1-1}
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int e^x\dx=e^x+c$ & \\ \hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int a^x\dx=\frac{a^x}{\ln a}+c$ & \pop{Pravidla pro integrování}$\int a\,f(x)\dx=a\int f(x)\dx$\\ \hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int\sin x\dx=-\cos x+c$ & $\int(f(x)+g(x))\dx=\int f(x)\dx+\int g(x)\dx$\\ \hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int\cos x\dx=\sin x+c$ & \pop{Vnitřní složka je lineární = pokud nechceme dělat substituci}$\int f(ax+b)\dx=\frac1aF(ax+b)+C$\\ \hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int\frac{1}{(\sin x)^2}\dx=-\cotg x+c$ & \pop{Derivace spodku je vršek! První co u zlomku kontroluji!}$\displaystyle\int\frac{f'(x)}{f(x)}\dx=\ln|f(x)|+C$\\ \hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int\frac{1}{(\cos x)^2}\dx=\tg x+c$ & \pop{Metoda per partes = integrace SOUČINU}$\int u'\,v\dx=u\,v-\int u\,v'\dx$\\ \hline
+\rule[-14pt]{0pt}{34pt}$\displaystyle\int\frac{1}{x^2+a^2}\dx=\frac1a\arctg\frac xa+c$ & \pop{Integrace složené funkce -- substituce $t$ = volíme tak,\newline aby po dosazení vypadla neznámá $x$.}$\int f(\varphi(x))\,\varphi'(x)\dx=\int f(t)\dt$\\ \hline
+\end{tabular}}
+
+\begin{document}
+\shorthandoff{-}
+\vspace*{\fill}
+\begin{center}
+\tab\hfill\tab
+\end{center}
+\vspace*{\fill}
+\end{document}

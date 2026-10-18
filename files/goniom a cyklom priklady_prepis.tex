@@ -1,0 +1,90 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.8cm,top=1.5cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\newcommand{\cer}[1]{{\color{red}#1}}
+\newcommand{\blok}{%
+\textbf{URČIT}
+\begin{itemize}[nosep, topsep=0pt]
+\item Umíme pouze násobky úhlu $30^\circ$ $(90^\circ,60^\circ,120^\circ,\dots)$ a $45^\circ$ $(45^\circ,90^\circ,135^\circ,\dots)$
+\item Pro převod na \textbf{RADIÁNY} použijeme: $180^\circ=\pi$
+\end{itemize}
+\[ 30^\circ\to180:6= \qquad 45^\circ\to180:4= \qquad 120^\circ= \qquad 135^\circ= \]
+\begin{itemize}[nosep, topsep=0pt]
+\item Stejně tak i pro určení z radiánů na stupně: $\frac{5\pi}{4}=$ \qquad $\frac{3\pi}{2}=$
+\end{itemize}
+\textbf{PAMATUJ:}\\
+$\sin/\cos$ nabývá hodnot: $\frac{\sqrt0}{2},\frac{\sqrt1}{2},\frac{\sqrt2}{2},\frac{\sqrt3}{2},\frac{\sqrt4}{2}\ \to\ 0,\frac12,\frac{\sqrt2}{2},\frac{\sqrt3}{2},1$
+\qquad $\tg/\cotg$ nabývá hodnot: $0,\frac{\sqrt3}{3},1,\sqrt3$\\
+\cer{U goniometrických funkcí je výsledek \textbf{číslo}.}
+
+\smallskip
+\begin{tabular}{@{}p{4cm}p{4cm}p{4cm}p{3cm}@{}}
+$\sin\frac\pi6=\sin30^\circ=$ & $\cos\frac\pi4=\cos45^\circ=$ & $\tg\frac\pi6=$ & $\cotg0=$\\
+$\sin\frac\pi2=\sin90^\circ=$ & $\cos\frac\pi3=\cos60^\circ=$ & $\tg\pi=$ & $\cotg\frac\pi2=$\\
+$\sin\frac{5\pi}{4}=\sin225^\circ=$ & $\cos\frac{5\pi}{6}=\cos150^\circ=$ & $\tg\frac\pi2=$ & $\cotg\pi=$\\
+ & & $\tg\frac{2\pi}{3}=$ & $\cotg\frac{4\pi}{3}=$
+\end{tabular}
+
+\smallskip
+\cer{U cyklometrických funkcí je výsledek \textbf{ÚHEL} (v radiánech).}
+
+\smallskip
+\begin{tabular}{@{}p{4cm}p{4cm}p{4cm}p{3cm}@{}}
+$\arcsin\frac12=$ & $\arccos0=$ & $\arctg0=$ & $\arccotg\sqrt3=$\\
+$\arcsin0=$ & $\arccos\left(-\frac12\right)=$ & $\arctg1=$ & $\arccotg\frac{\sqrt3}{3}=$\\
+$\arcsin\left(-\frac12\right)=$ & $\arccos\frac{\sqrt3}{2}=$ & $\arctg\sqrt3=$ & $\arccotg0=$
+\end{tabular}
+}
+
+\begin{document}
+\blok
+\vfill
+\blok
+\vfill
+\blok
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+
+\begin{document}
+
+\section*{Vypočti:}
+
+\[
+\iint_M\frac{x^2}{1+y^2}\,\mathrm{d}M, \qquad M=\underbrace{\langle0,2\rangle}_{\text{\color{green!50!black}\uv{$x$}}}\times\underbrace{\langle0,1\rangle}_{\text{\color{red!75!black}\uv{$y$}}}
+\]
+
+\begin{align*}
+{\color{green!50!black}\int_0^2}\left({\color{red!75!black}\int_0^1}\frac{x^2}{1+y^2}\,{\color{red!75!black}\mathrm{d}y}\right){\color{green!50!black}\mathrm{d}x}
+&= \int_0^2\left(x^2\int_0^1\frac{1}{1+y^2}\dy\right)\dx =\\
+&= \int_0^2\Big[x^2\arctg y\Big]_{y=0}^{y=1}\dx
+= \int_0^2\Big(x^2\underbrace{\arctg1}_{45^\circ=\frac\pi4}-x^2\underbrace{\arctg0}_{0^\circ=0}\Big)\dx
+=\\
+&= \int_0^2\left(x^2\,\frac\pi4-0\right)\dx = \left[\frac\pi4\,\frac{x^3}{3}\right]_0^2 = \frac{8\pi}{12}-0 = \vysl{\frac{2\pi}{3}}
+\end{align*}
+({\color{red!75!black}meze pro $y$} jsou u vnitřního integrálu, {\color{green!50!black}meze pro $x$} u vnějšího.)
+
+\bigskip
+\pozn{\textbf{!} U integrálu NAD OBDÉLNÍKEM \underline{lze počítat} i přehozené pořadí a výsledek vyjde stejně:}
+\[
+{\color{red!75!black}\int_0^1}\left({\color{green!50!black}\int_0^2}\frac{x^2}{1+y^2}\,{\color{green!50!black}\mathrm{d}x}\right){\color{red!75!black}\mathrm{d}y}
+= \ \dots\ = \vysl{\frac{2\pi}{3}}
+\]
+
+\end{document}

@@ -1,0 +1,207 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,fit,shapes.geometric,decorations.pathmorphing,decorations.pathreplacing,babel}
+\setlength{\mathindent}{1.5em}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+\providecommand{\arctg}{\operatorname{arctg}}
+% značky pro šipky a kroužky (více průchodů pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\newcommand{\tmt}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\textstyle #2$};}
+\newcommand{\mk}[1]{\tikz[remember picture, overlay]\coordinate (#1) at (0,0.25em);}
+% červeně zakroužkovaný výraz se jménem (pro šipky)
+\newcommand{\krn}[2]{\tikz[remember picture, baseline=(#1.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt] (#1) {$\displaystyle #2$};}
+\newcommand{\krnt}[2]{\tikz[remember picture, baseline=(#1.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt] (#1) {$\textstyle #2$};}
+\newcommand{\kr}[1]{\tikz[baseline=(k.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt] (k) {$#1$};}
+\newcommand{\cerv}[1]{{\color{red!75!black}#1}}
+\newcommand{\Dbox}[1]{\fcolorbox{red!75!black}{white}{$#1$}}
+% D v červeném rámečku pod daným výrazem
+\newcommand{\Dpod}[2]{\node[draw=red!75!black, thick, anchor=north, inner sep=2pt] at ($(#1.south)+(0,-0.18)$) {$#2$};}
+% podtržení termu (seskupení podle mocnin)
+\newcommand{\ozn}[2]{\tikz[baseline=(o.base)]{\node[inner sep=0pt, outer sep=0pt] (o) {$#2$};
+  \draw[#1, thin] ([yshift=-5pt]o.south west) -- ([yshift=-5pt]o.south east);}}
+\tikzset{vlnka/.style={decorate, decoration={snake, amplitude=1pt, segment length=4pt}},
+  smycky/.style={decorate, decoration={coil, aspect=0.6, amplitude=1.6pt, segment length=3pt}},
+  carky/.style={decorate, decoration={ticks, segment length=2.5pt, amplitude=2pt}}}
+\tikzset{pz/.style={red!75!black, font=\small, inner sep=1pt},
+  sipr/.style={-{Stealth}, semithick, red!75!black},
+  smycka/.style={draw=red!75!black, ellipse, inner sep=-2pt}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+
+\begin{document}
+\shorthandoff{-}
+
+\section*{Integruj:}
+
+\textbf{1)}
+\[
+\int\frac{-2}{x+5}\dx = -2\int\frac{1}{\krnt{c1}{x+5}}\dx = \vysl{-2\ln|x+5|+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=west] (t1) at ($(c1.south east)+(0.35,-0.35)$) {derivace spodku je vršek};
+\draw[sipr] (t1.west) -- ([xshift=1pt]c1.south east);
+\end{tikzpicture}
+\]
+\vspace{0.4cm}
+
+\textbf{2)}
+\begin{align*}
+\int\frac{-2x}{x+5}\dx &= -2\int\frac{\tmt{p1}{x+5}\tmt{p2}{{}-5}}{\tmt{pd}{x+5}}\dx
+= -2\int\left(\frac{\cancel{x+5}}{\cancel{x+5}}-\frac{5}{x+5}\right)\dx =\\
+&= -2\left(\int1\dx-5\int\frac{1}{\krnt{c2}{x+5}}\dx\right) = -2\left(x-5\ln|x+5|\right) =\\[1.1em]
+&= \vysl{-2x+10\ln|x+5|+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=west] (t2) at ($(c2.south east)+(0.35,-0.3)$) {derivace spodku je vršek};
+\draw[sipr] (t2.west) -- ([xshift=1pt]c2.south east);
+\node[smycka, rotate fit=-25, fit=(p1)(pd)] {};
+\node[smycka, rotate fit=25, fit=(p2)(pd)] {};
+\end{tikzpicture}
+\end{align*}
+
+\textbf{3)}
+\begin{align*}
+\int\frac{-2x+\mathbf{3}}{x+5}\dx &= \int\frac{\tmt{q1}{-2x}\tmt{q2}{{}+3}}{\tmt{qd}{x+5}}\dx
+= \int\left(\frac{-2x}{x+5}+\frac{3}{x+5}\right)\dx =\\
+&= -2\int\frac{\tmt{r1}{x+5}-5}{\tmt{rd}{x+5}}\dx+3\int\frac{1}{x+5}\dx =\\
+&= -2\int\left(\frac{x+5}{x+5}-\frac{5}{x+5}\right)\dx+3\ln|x+5|
+= -2\left(x-5\ln|x+5|\right)+3\ln|x+5| =\\[6pt]
+\mk{lr}&= -2x+\krn{k10}{10}\ln\tm{l10}{|x+5|}+\krn{k3}{3}\ln\tm{l3}{|x+5|} = -2x+\ln|x+5|^{10}+\ln|x+5|^3 =\\
+&= -2x+\ln\left(|x+5|^{10}\cdot|x+5|^3\right) = \vysl{-2x+\ln|x+5|^{13}+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[smycka, rotate fit=-25, fit=(q1)(qd)] {};
+\node[smycka, rotate fit=25, fit=(q2)(qd)] {};
+\node[smycka, fit=(r1)(rd)] {};
+\draw[sipr] (k10.north) to[out=50, in=120] ([yshift=1pt]l10.north east);
+\draw[sipr] (k3.north) to[out=50, in=120] ([yshift=1pt]l3.north east);
+\node[pz, anchor=east] at ($(lr)+(-0.6,0)$) {$a\cdot\log x=\log x^a$};
+\end{tikzpicture}
+\end{align*}
+\pozn{$\left.\begin{array}{l}\log_z a+\log_z b=\log_z(a\cdot b)\\[2pt] \log_z a-\log_z b=\log_z\frac ab\end{array}\right\}$
+\ Musí mít logaritmy stejný základ! (= malé písmeno $z$)}
+
+\textbf{4)}
+\begin{align*}
+\int\frac{-3}{(x+5)^2}\dx &= -3\int\frac{1}{(x+5)^2}\dx = \subst{x+5=t\\ \mathrm{d}x=\mathrm{d}t}
+= -3\int\frac{1}{t^2}\dt = -3\int t^{-2}\dt =\\
+&= -3\,\frac{t^{-1}}{-1}+c = +3\,\frac1t+c = \vysl{\frac{3}{x+5}+c}
+\end{align*}
+
+\textbf{5)}
+\[
+\tm{b5}{\int\frac{-3\mathbf{x}}{(x+5)^2}\dx = \int\left(\frac{A}{(x+5)^{\cerv{2}}}+\frac{B}{(x+5)^{\cerv{1}}}\right)\dx}
+= \int\left(\frac{15}{(x+5)^2}+\frac{-3}{x+5}\right)\dx =
+\begin{tikzpicture}[remember picture, overlay]
+\draw[semithick] ([yshift=1pt]b5.south west) -- ++(0,-6pt) -| ([yshift=1pt]b5.south east);
+\node[anchor=north west] at ([xshift=4pt, yshift=-2pt]b5.south east) {$\Big/\cdot(x+5)^2$};
+\end{tikzpicture}
+\]
+\vspace{0.4cm}
+\begin{align*}
+-3x &= A+B(x+5)\\
+-3x &= A+Bx+5B\\
+x^1:&\quad \boxed{-3=B}\\
+x^0:&\quad 0=A+5B \ \to\ 0=A+5\cdot(-3) \ \Rightarrow\ \boxed{A=15}
+\end{align*}
+\[
+= 15\int(x+5)^{-2}\dx-3\krn{c5}{\int\frac{1}{x+5}}\dx = 15\cdot\frac{(x+5)^{-1}}{-1}-3\ln|x+5|
+= \vysl{\frac{-15}{x+5}-3\ln|x+5|+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=north] (t5) at ($(c5.south)+(0.2,-0.3)$) {$=\ln|x+5|$};
+\draw[sipr] ([yshift=1pt]t5.north) -- (c5.south);
+\end{tikzpicture}
+\]
+\newpage
+\textbf{6)}
+\vspace{0.4cm}
+\begin{align*}
+\int\frac{\krnt{c6}{6}}{\tmt{d6}{x^2+x+\mathbf{3}}}\dx &= \int\frac{6}{\left(x+\frac12\right)^2-\frac14+\tmt{t3}{3}}\dx
+= \int\frac{6}{\left(x+\frac12\right)^2+\frac{11}{4}}\dx
+= 6\int\frac{1}{\left(x+\frac12\right)^2+\frac{11}{4}}\dx =\\[2.6em]
+&= 6\cdot\frac{2}{\sqrt{11}}\arctg\frac{\left(x+\frac12\right)}{\frac{\sqrt{11}}{2}}
+= \frac{12}{\sqrt{11}}\arctg\frac{\tmt{nn}{\left(x+\frac12\right)}}{\frac{\sqrt{11}}{\krnt{c62}{2}}}
+\quad= \vysl{\frac{12}{\sqrt{11}}\arctg\frac{2x+1}{\sqrt{11}}+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=south west] (t6) at ($(c6.north east)+(0.3,0.05)$) {není \uv{$x$}, proto jen upravím na čtverec};
+\draw[sipr] (t6.west) -- (c6.north east);
+\Dpod{d6}{D=1^2-4\cdot1\cdot3<0}
+\node[anchor=north, inner sep=0pt, align=center] at ($(t3.south)+(0,-0.15)$) {$\overset{\displaystyle\|}{\frac{12}{4}}$};
+\draw[sipr] (c62.east) to[out=10, in=0, looseness=1.4] ([xshift=2pt]nn.east);
+\end{tikzpicture}
+\end{align*}
+
+\textbf{7)}
+\vspace{0.8cm}
+\begin{align*}
+\int\frac{\krnt{c7}{6x+\mathbf{4}}}{\tmt{d7}{x^2-4x+8}}\dx &= \int\frac{3(2x-4)+12+4}{x^2-4x+8}\dx
+= \int\frac{\tmt{s1}{3(2x-4)}\tmt{s2}{{}+16}}{\tmt{sd}{x^2-4x+8}}\dx =\\[2.2em]
+&= 3\krn{c7a}{\int\frac{2x-4}{x^2-4x+8}}\dx+16\krn{c7b}{\int\frac{1}{{\color{red!75!black}\underbracket[0.6pt][2pt]{\color{black}x^2-4x}}+8}}\tm{e7}{{}=}\\[8.4em]
+&= \vysl{3\ln\left|x^2-4x+8\right|+16\cdot\frac12\arctg\frac{x-2}{2}+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[smycka, rotate fit=-15, fit=(s1)(sd)] {};
+\node[smycka, rotate fit=25, fit=(s2)(sd)] {};
+\node[pz, anchor=south west] (t7) at ($(c7.north east)+(0.3,0.3)$) {je \uv{$x$}, proto nahoru píšu derivaci spodku};
+\draw[sipr] (t7.west) -- (c7.north east);
+\Dpod{d7}{D=(-4)^2-4\cdot1\cdot8<0}
+\node[pz, anchor=north] (t7a) at ($(c7a.south)+(0.3,-0.12)$) {$=\ln\left|x^2-4x+8\right|$};
+\node[pz, anchor=north west] (t7b) at ($(e7.south west)+(-0.1,-0.25)$) {$=$ úprava na čtverec};
+\node[anchor=north west, font=\small] (w7) at ($(c7b.south)+(0.55,-0.8)$)
+  {$\displaystyle\int\frac{1}{(x-2)^2-4+8}\dx =$};
+\node[font=\small] at ($(w7.north west)+(0.2,0.25)$) {$\|$};
+\node[anchor=north west, font=\small] at ($(w7.south west)+(0.25,-0.05)$)
+  {$\displaystyle= \int\frac{1}{(x-2)^2+4}\dx = \frac12\arctg\frac{x-2}{2}$};
+\end{tikzpicture}
+\end{align*}
+
+\newpage
+\textbf{8)}
+\[
+\int\frac{5x+2}{x^5+x^3}\dx = \int\frac{5x+2}{\tmt{d8}{x^3(x^2+1)}}\dx\,; \qquad
+\tm{b8}{\frac{5x+2}{x^3(x^2+1)} = \frac{A}{x^3}+\frac{B}{x^2}+\frac{C}{x}+\frac{Dx+E}{x^2+1}}
+\begin{tikzpicture}[remember picture, overlay]
+\draw[semithick] ([yshift=1pt]b8.south west) -- ++(0,-6pt) -| ([yshift=1pt]b8.south east);
+\node[anchor=north west] at ([xshift=4pt, yshift=-2pt]b8.south east) {$\Big/\cdot x^3(x^2+1)$};
+\Dpod{d8}{D=0^2-4\cdot1\cdot1<0}
+\end{tikzpicture}
+\]
+\vspace{0.7cm}
+\begin{align*}
+5x+2 &= A(x^2+1)+Bx(x^2+1)+Cx^2(x^2+1)+(Dx+E)x^3\\
+\ozn{smycky}{5x}+2 &= \ozn{carky}{Ax^2}+A+\ozn{vlnka}{Bx^3}+\ozn{smycky}{Bx}+\kr{Cx^4}+\ozn{carky}{Cx^2}+\kr{Dx^4}+\ozn{vlnka}{Ex^3}
+\end{align*}
+\[
+\begin{array}{lll}
+x^4: & 0=C+D & \longrightarrow\ 0=-2+D \ \Rightarrow\ \boxed{D=2}\\
+x^3: & 0=B+E & \longrightarrow\ 0=5+E \ \Rightarrow\ \boxed{E=-5}\\
+x^2: & 0=A+C & \to\ 0=2+C \ \Rightarrow\ \boxed{C=-2}\\
+x^1: & \boxed{5=B} &\\
+x^0: & \boxed{2=A} &
+\end{array}
+\]
+\begin{align*}
+\int&\left(\frac{2}{x^3}+\frac{5}{x^2}+\frac{-2}{x}+\frac{\tmt{u1}{2x}\tmt{u2}{{}-5}}{\tmt{ud}{x^2+1}}\right)\dx
+=\\
+&= 2\int x^{-3}\dx+5\int x^{-2}\dx-2\krn{c8a}{\int\frac1x}\dx+\krn{c8b}{\int\frac{2x}{x^2+1}}\dx-5\int\frac{1}{x^2+1}\dx =\\[1.2em]
+&= 2\,\frac{x^{-2}}{-2}+5\,\frac{x^{-1}}{-1}-2\ln|x|+\ln\left|x^2+1\right|-5\arctg\frac{x}{1} =\\
+&= \vysl{-\frac{1}{x^2}-\frac{5}{x}-2\ln|x|+\ln\left|x^2+1\right|-5\arctg x+c}
+\begin{tikzpicture}[remember picture, overlay]
+\node[smycka, rotate fit=-25, fit=(u1)(ud)] {};
+\node[smycka, rotate fit=25, fit=(u2)(ud)] {};
+\node[pz, anchor=north] at ($(c8a.south)+(0,-0.1)$) {$=\ln|x|$};
+\node[pz, anchor=north] at ($(c8b.south)+(0,-0.1)$) {$=\ln\left|x^2+1\right|$};
+\end{tikzpicture}
+\end{align*}
+
+\end{document}

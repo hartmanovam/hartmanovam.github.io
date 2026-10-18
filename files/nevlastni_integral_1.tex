@@ -1,0 +1,212 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,fit,shapes.geometric,decorations.pathmorphing,babel}
+\setlength{\mathindent}{1.5em}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+\DeclareMathOperator{\arctg}{arctg}
+% značky pro šipky a kroužky (více průchodů pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\newcommand{\tmt}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\textstyle #2$};}
+\newcommand{\cerv}[1]{{\color{red!75!black}#1}}
+% zakroužkováno modrou propiskou (= černě) a pod tím „‖ hodnota“
+\newcommand{\kbe}[2]{\underset{\textstyle\overset{\|}{#2}}{\tikz[baseline=(k.base)]\node[draw, thin, ellipse, inner sep=0pt] (k) {$\displaystyle #1$};}}
+% zakroužkováno červeně a pod tím „‖ text“
+\newcommand{\kre}[2]{\underset{\textstyle\cerv{\overset{\|}{\text{#2}}}}{\tikz[baseline=(k.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt] (k) {$\displaystyle #1$};}}
+% červeně podtrženo s hvězdičkami (odkaz na pomocný výpočet)
+\newcommand{\hv}[2]{\underset{\cerv{#1}}{\cerv{\underline{\color{black}#2}}}}
+% zvýrazňovač (modrý fix)
+\newcommand{\fix}[1]{{\setlength{\fboxsep}{1.5pt}\colorbox{cyan!30}{#1}}}
+\newcommand{\vlnt}[1]{\tikz[baseline=(o.base)]{\node[inner sep=0pt, outer sep=0pt] (o) {#1};
+  \draw[thin, decorate, decoration={snake, amplitude=1pt, segment length=4pt}] ([yshift=-3pt]o.south west) -- ([yshift=-3pt]o.south east);}}
+% malý náčrtek grafu: exp / sqrt / ln
+\newcommand{\nacrt}[2]{\begin{tikzpicture}[thin, baseline=(current bounding box.north)]
+\draw (-0.6,0) -- (0.8,0); \draw (0,-0.45) -- (0,0.6);
+\ifx#1e\draw[thick] (-0.6,0.06) .. controls (-0.1,0.1) and (0.25,0.25) .. (0.5,0.62);\fi
+\ifx#1s\draw[thick] (0,0) .. controls (0.08,0.25) and (0.35,0.45) .. (0.75,0.5) node[right, font=\scriptsize] {#2};\fi
+\ifx#1l\draw[thick] (0.05,-0.45) .. controls (0.1,-0.05) and (0.3,0.25) .. (0.75,0.45);\fi
+\end{tikzpicture}}
+% pomocný výpočet v červeném rámečku
+\newcommand{\pomoc}[2]{\par\noindent\hspace*{0.3em}\begin{tikzpicture}[baseline]
+\node[draw=red!75!black, rounded corners=2pt, inner sep=5pt, text width=#1] (pb) {#2};
+\node[red!75!black, fill=white, anchor=west, inner sep=2pt] at ($(pb.north west)+(0.3,0)$) {Pomocný výpočet};
+\end{tikzpicture}\par}
+\tikzset{pz/.style={red!75!black, font=\small, inner sep=1pt},
+  sipr/.style={-{Stealth}, semithick, red!75!black},
+  sipb/.style={-{Stealth}, thin},
+  smycka/.style={draw=red!75!black, ellipse, inner sep=-2pt}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\newcommand{\lt}[1]{\lim_{t\to#1}}
+\newcommand{\lu}[1]{\lim_{u\to#1}}
+
+\begin{document}
+\shorthandoff{-}
+
+\begin{center}
+\Large \vlnt{Příklady} \vlnt{na} \vlnt{procvičení}
+\end{center}
+
+SUBSTITUCE:
+
+% ------------------------------------------------------------- a)
+\begin{align*}
+\hspace*{-\mathindent}\fix{a)}\quad \int_0^\infty x\cdot e^{x^2}\dx &= \lt{\infty}\int_0^t x\cdot e^{x^2}\dx
+= \lt{\infty}\Big[\hv{*}{\tfrac12e^{x^2}}\Big]_0^t =\\
+&= \lt{\infty}\left(\frac12e^{t^2}-\frac12e^0\right) = \frac12\lt{\infty}e^{t^2}-\frac12
+= \tm{a8}{\frac12\infty}-\frac12 = \vysl{\infty}\ \longleftarrow \text{Integrál DIVERGUJE}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, inner sep=0pt] at ([yshift=-4pt]a8.south) {\nacrt{e}{}};
+\end{tikzpicture}
+\end{align*}
+\vspace{0.4cm}
+
+\pomoc{0.92\textwidth}{%
+\[
+\int x\cdot e^{x^2}\dx = \subst{t=x^2\\ \mathrm{d}t=2x\dx\\ \mathrm{d}x=\frac{\mathrm{d}t}{2x}}
+= \int\cancel{x}\cdot e^t\,\frac{\mathrm{d}t}{2\cancel{x}} = \frac12\int e^t\dt = \frac12e^t = \hv{*}{\frac12e^{x^2}}
+\]}
+
+\bigskip
+% ------------------------------------------------------------- b)
+\begin{align*}
+\hspace*{-\mathindent}\fix{b)}\quad \int_{-\infty}^{\infty}\frac{1}{\tm{b1}{x^2+2x+\mathbf{4}}}\dx &=
+\int_{-\infty}^0\frac{1}{(x+1)^2+3}\dx+\int_0^\infty\frac{1}{(x+1)^2+3}\dx =\\[3.6em]
+&= \lt{-\infty}\int_t^0\frac{1}{(x+1)^2+3}\dx+\lu{\infty}\int_0^u\frac{1}{(x+1)^2+3}\dx =
+\begin{tikzpicture}[remember picture, overlay]
+\node[draw=red!75!black, ellipse, inner sep=0pt, fit=(b1)] {};
+\node[anchor=north, align=center, inner sep=0pt] at ([yshift=-5pt]b1.south)
+  {$\cerv{\|}$\\[-2pt] \cerv{\small ÚPRAVA}\\[-3pt] \cerv{\small na čtverec}\\[-1pt] $\overset{\|}{(x+1)^2+3}$};
+\end{tikzpicture}
+\end{align*}
+
+\pomoc{0.92\textwidth}{%
+\[
+\int\frac{1}{(x+1)^2+3}\dx = \subst{t=x+1\\ \mathrm{d}t=\mathrm{d}x}
+= \int\frac{1}{t^2+3}\dt = \frac{1}{\sqrt3}\arctg\frac{t}{\sqrt3} = \hv{**}{\frac{1}{\sqrt3}\arctg\frac{x+1}{\sqrt3}}
+\]}
+
+\begin{align*}
+&= \lt{-\infty}\Big[\hv{**}{\tfrac{1}{\sqrt3}\arctg\tfrac{x+1}{\sqrt3}}\Big]_t^0
++\lu{\infty}\Big[\hv{**}{\tfrac{1}{\sqrt3}\arctg\tfrac{x+1}{\sqrt3}}\Big]_0^u =\\
+&= \lt{-\infty}\left(\frac{1}{\sqrt3}\arctg\frac{1}{\sqrt3}-\frac{1}{\sqrt3}\arctg\frac{t+1}{\sqrt3}\right)
++\lu{\infty}\left(\frac{1}{\sqrt3}\arctg\frac{u+1}{\sqrt3}-\frac{1}{\sqrt3}\arctg\frac{1}{\sqrt3}\right) =\\
+&= \frac{1}{\sqrt3}\cdot\frac{\pi}{6}-\frac{1}{\sqrt3}\kbe{\arctg(-\infty)}{-\frac{\pi}{2}}
++\frac{1}{\sqrt3}\kbe{\arctg(\infty)}{\frac{\pi}{2}}-\frac{1}{\sqrt3}\cdot\frac{\pi}{6}
+= \frac{1}{\sqrt3}\left(\frac{\pi}{2}+\frac{\pi}{2}\right) = \tm{b0}{\vysl{\frac{\pi}{\sqrt3}}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north east] (bk) at ([xshift=0.6cm, yshift=-0.45cm]b0.south east) {Integrál KONVERGUJE};
+\draw[sipb] ([xshift=-0.6cm]bk.north east) -- ([xshift=-0.15cm, yshift=-1pt]b0.south east);
+\end{tikzpicture}
+\end{align*}
+
+\vspace{0.6cm}
+% ------------------------------------------------------------- c)
+\begin{align*}
+\hspace*{-\mathindent}\fix{c)}\quad \int_{-\infty}^0 x^2e^{x^3}\dx &= \lt{-\infty}\int_t^0 x^2e^{x^3}\dx
+= \lt{-\infty}\Big[\hv{***}{\tfrac13e^{x^3}}\Big]_t^0
+= \lt{-\infty}\left[\frac13-\frac{e^{t^3}}{3}\right] = \frac13-\frac{e^{-\infty}}{3} =
+\end{align*}
+\begin{minipage}[t]{0.7\textwidth}
+\vspace{0pt}
+\pomoc{0.95\textwidth}{%
+\[
+\int x^2e^{x^3}\dx = \subst{t=x^3\\ \mathrm{d}t=3x^2\dx\\ \frac{\mathrm{d}t}{3x^2}=\mathrm{d}x}
+= \int\cancel{x^2}\,e^t\,\frac{\mathrm{d}t}{3\cancel{x^2}} = \frac13e^t = \hv{***}{\frac13e^{x^3}}
+\]}
+\end{minipage}%
+\begin{minipage}[t]{0.3\textwidth}
+\vspace{-6pt}
+\begin{align*}
+&= \frac13-\frac{1}{3e^\infty} =\\
+&= \frac13-\kbe{\frac{1}{3\infty}}{0} = \tm{c0}{\vysl{\frac13}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, font=\small] at ([xshift=0.15cm, yshift=-0.05cm]c0.south) {KONVERG.};
+\end{tikzpicture}
+\end{align*}
+\end{minipage}
+
+\newpage
+% ============================================================= 2. list
+% ------------------------------------------------------------- a)
+\begin{align*}
+\hspace*{-\mathindent}\fix{a)}\quad \int_0^\infty4\sqrt{x}\dx &= \lt{\infty}\int_0^t4x^{\frac12}\dx
+= \lt{\infty}\left[4\,\frac{x^{\frac32}}{\frac32}\right]_0^t =\\
+&= \lt{\infty}\left[\frac{8\sqrt{x^3}}{3}\right]_0^t = \lt{\infty}\left(\tm{s8}{\frac{8\sqrt{t^3}}{3}}-0\right) = \tm{a0}{\vysl{\infty}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, inner sep=0pt] at ([yshift=-8pt]s8.south) {\nacrt{s}{$\sqrt{t}$}};
+\node[anchor=north, align=left] (ad) at ([xshift=0.9cm, yshift=-0.5cm]a0.south) {Integrál\\ diverguje};
+\draw[sipb] ([xshift=-0.5cm]ad.north) -- ([yshift=-1pt]a0.south);
+\end{tikzpicture}
+\end{align*}
+\vspace{0.9cm}
+
+% ------------------------------------------------------------- b)
+\begin{align*}
+\hspace*{-\mathindent}\fix{b)}\quad \int_2^\infty\frac{1}{x^2}\dx &= \lt{\infty}\int_2^t x^{-2}\dx
+= \lt{\infty}\left[\frac{x^{-1}}{-1}\right]_2^t = \lt{\infty}\left[-\frac1x\right]_2^t =\\
+&= \lt{\infty}\left(-\frac1t-\left(-\frac12\right)\right) = \kbe{-\frac1\infty}{0}+\frac12 = \tm{b2}{\vysl{\frac12}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=west, align=left] (bk2) at ([xshift=0.3cm, yshift=-0.35cm]b2.south east) {Integrál\\ KONVERGUJE};
+\draw[sipb] (bk2.west) -- ([yshift=-1pt]b2.south east);
+\end{tikzpicture}
+\end{align*}
+
+% ------------------------------------------------------------- c)
+\begin{align*}
+\hspace*{-\mathindent}\fix{c)}\quad \int_1^\infty\frac{x^3-1}{x^4}\dx &= \lt{\infty}\int_1^t\frac{\tmt{s1}{x^3}\tmt{s2}{{}-1}}{\tmt{sd}{x^4}}\dx
+= \lt{\infty}\int_1^t\frac1x-x^{-4}\dx =\\
+&= \lt{\infty}\left[\ln|x|-\frac{x^{-3}}{-3}\right]_1^t = \lt{\infty}\left[\ln|x|+\frac{1}{3x^3}\right]_1^t =\\
+&= \lt{\infty}\Big(\kbe{\ln|t|}{\infty}+\kbe{\frac{1}{3t^3}}{0}-\Big(\kbe{\ln|1|}{0}+\frac13\Big)\Big) =\\
+&= \tm{c8}{\infty+0-0-\frac13} = \tm{c1}{\vysl{\infty}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[smycka, rotate fit=-25, fit=(s1)(sd)] {};
+\node[smycka, rotate fit=25, fit=(s2)(sd)] {};
+\node[anchor=north, inner sep=0pt] at ([yshift=-8pt]c8.south) {\nacrt{l}{}};
+\node[anchor=west] (cd) at ([xshift=0.5cm, yshift=-0.4cm]c1.south east) {diverguje};
+\draw[thin] (cd.west) -- ([xshift=-0.1cm, yshift=-1pt]c1.south east);
+\end{tikzpicture}
+\end{align*}
+\vspace{0.9cm}
+
+% ------------------------------------------------------------- per partes
+PER PARTES: \ \cerv{$+$ limita $\dfrac{\infty}{\infty}$ = L'Hospitalovo pravidlo (L.P.)}
+
+\begin{align*}
+\hspace*{-\mathindent}\fix{a)}\quad \int_0^\infty4x\cdot e^{-2x}\dx &= \lt{\infty}\int_0^t4x\cdot e^{-2x}\dx
+= \lt{\infty}\Big[\hv{*}{\frac{-2x-1}{e^{2x}}}\Big]_0^t =\\
+&= \lt{\infty}\left(\tm{lp}{\frac{-2t-1}{e^{2t}}}-\left(\frac{-1}{e^0}\right)\right) = \tm{lq}{\frac{-2}{e^{2t}\cdot2}}+\frac11
+= \kbe{-\frac1\infty}{0}+1 = \tm{p1}{\vysl{1}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=north] (lpa) at ([yshift=-3pt]lp.south) {$\frac{\infty}{\infty}$\,! L.P.!};
+\node[anchor=north west, inner sep=0pt] at ([xshift=2pt, yshift=-2pt]lpa.north east) {\scalebox{0.7}{\nacrt{e}{}}};
+\node[pz, anchor=north west] (lpb) at ([xshift=1.2cm, yshift=-0.5cm]lpa.north east)
+  {L.P.: $\displaystyle\frac{(-2t-1)'}{\left(e^{2t}\right)'} = \frac{-2}{e^{2t}\cdot2}$};
+\draw[sipr, thin] (lq.south |- lpb.north) -- ([yshift=-1pt]lq.south);
+\node[anchor=west] (pk) at ([xshift=0.25cm, yshift=-0.4cm]p1.south east) {Integrál KONVERGUJE};
+\draw[sipb] (pk.west) -- ([yshift=-1pt]p1.south east);
+\end{tikzpicture}
+\end{align*}
+\vspace{0.7cm}
+
+\pomoc{0.94\textwidth}{%
+\vspace{-0.4\baselineskip}
+\begin{align*}
+\int4x\cdot e^{-2x}\dx &=
+\left|\begin{array}{ll} u=4x & \to\ u'=4\\ v'=e^{-2x} & \phantom{\to\ }v=\frac{e^{-2x}}{-2}\end{array}\right|
+= \overset{\cerv{2}}{\cancel{4}}x\left(\frac{1}{\cancel{-2}e^{2x}}\right)-\int\frac{\overset{\cerv{2}}{\cancel{4}}}{\cancel{-2}\,e^{2x}}\dx =\\
+&= -\frac{2x}{e^{2x}}+2\int e^{-2x}\dx = -\frac{2x}{e^{2x}}+\cancel{2}\,\frac{e^{-2x}}{\cancel{-2}} = \hv{*}{-\frac{2x}{e^{2x}}-\frac{1}{e^{2x}}}
+\end{align*}}
+
+\end{document}

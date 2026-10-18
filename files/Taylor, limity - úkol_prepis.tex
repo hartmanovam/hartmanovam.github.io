@@ -1,0 +1,193 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,shapes.geometric,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+% značky pro šipky (více průchodů pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\newcommand{\tmt}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\textstyle #2$};}
+\newcommand{\kruh}[1]{\tikz[baseline=(k.base)]\node[draw, ellipse, inner sep=0pt] (k) {$#1$};}
+\newcommand{\mk}[1]{\tikz[remember picture, overlay]\coordinate (#1) at (0,0.25em);}
+\tikzset{sip/.style={-{Stealth}, semithick}}
+% vodorovná šipka od konce řádku (značka) k hodnotě v bodě
+\newcommand{\hsip}[2]{\draw[sip, red!75!black] ([xshift=6pt]#1) -- ([xshift=-5pt]#2.west |- #1);}
+
+\begin{document}
+
+\section*{Maclaurinův polynom 3. stupně\\ \mk{pro}pro $f(x)=\arcsin x$}
+
+\[
+T_3(x) = f(0)+\frac{f'(0)\cdot x}{1!}+\frac{f''(0)\cdot x^2}{2!}+\frac{f'''(0)\cdot x^3}{3!}
+\]
+\hspace*{1.2em}\tm{x0}{x_0=0}
+\begin{tikzpicture}[remember picture, overlay]
+\draw[sip] ([xshift=-3pt, yshift=1pt]pro) to[out=200, in=180, looseness=1.3] ([xshift=-2pt]x0.west);
+\end{tikzpicture}
+\begin{align*}
+f(0) &= \arcsin0 = 0\\
+f'(x) &= \frac{1}{\sqrt{1-x^2}}\mk{a1} & \tm{v1}{f'(0)} &= 1\\
+f''(x) &= \left(\frac{1}{\sqrt{1-x^2}}\right)' = \left(\left(1-x^2\right)^{-\frac12}\right)'
+= -\frac12\left(1-x^2\right)^{-\frac32}\cdot(-2x) = \frac{x}{\sqrt{\left(1-x^2\right)^3}}\mk{a2} & \tm{v2}{f''(0)} &= 0\\[1.3em]
+f'''(x) &= \frac{(x)'\cdot\sqrt{\left(1-x^2\right)^3}-x\cdot\tmt{sq}{\left(\sqrt{\left(1-x^2\right)^3}\right)'}}{\left(\sqrt{\left(1-x^2\right)^3}\right)^2} =\\
+&= \frac{1\cdot\sqrt{\left(1-x^2\right)^3}-x\cdot\frac32\left(1-x^2\right)^{\frac12}\cdot(-2x)}{\left(1-x^2\right)^3}\mk{a3} & \tm{v3}{f'''(0)} &= 1
+\end{align*}
+\begin{tikzpicture}[remember picture, overlay]
+\hsip{a1}{v1} \hsip{a2}{v2} \hsip{a3}{v3}
+\node[anchor=west] (sqn) at ($(sq.north east)+(1.4,0.42)$) {$\left(1-x^2\right)^{\frac32}$};
+\draw[sip] ([yshift=1pt]sq.north) to[out=70, in=180] ([xshift=-2pt]sqn.west);
+\end{tikzpicture}
+\[
+T_3(x) = 0+1\cdot x+0\cdot\frac{x^2}{2!}+\frac{1\cdot x^3}{3!} = \vysl{x+\frac{x^3}{6}}
+\]
+
+\section*{Taylorův polynom 3. stupně pro $f(x)=\arctg\frac1x$ v $x_0=1$}
+
+\[
+T_3(x) = f(1)+\frac{f'(1)(x-1)}{1!}+\frac{f''(1)(x-1)^2}{2!}+\frac{f'''(1)(x-1)^3}{3!}
+\]
+\begin{align*}
+f(1) &= \arctg1 = \frac\pi4\\
+f'(x) &= \frac{1}{1+\left(\frac1x\right)^2}\cdot\left(\frac1x\right)' = \frac{1}{1+\frac{1}{x^2}}\cdot(-1)\cdot x^{-2}
+= \frac{1}{\frac{x^2+1}{x^2}}\cdot\frac{-1}{x^2} = \frac{-1}{x^2+1}\mk{b1} & \tm{w1}{f'(1)} &= -\frac12\\
+f''(x) &= \left(-\frac{1}{x^2+1}\right)' = \left(-1\cdot\left(x^2+1\right)^{-1}\right)' =\\
+&= -1\cdot(-1)\cdot\left(x^2+1\right)^{-2}\cdot2x = \frac{2x}{\left(x^2+1\right)^2}\mk{b2} & \tm{w2}{f''(1)} &= \frac{2}{2^2} = \frac12\\
+f'''(x) &= \frac{(2x)'\cdot\left(x^2+1\right)^2-2x\cdot\left(\left(x^2+1\right)^2\right)'}{\left(x^2+1\right)^4} =\\
+&= \frac{2\left(x^2+1\right)^2-2x\cdot2\left(x^2+1\right)\cdot2x}{\left(x^2+1\right)^4}\mk{b3}
+& \tm{w3}{f'''(1)} &= \frac{2\cdot2^2-2\cdot2\cdot2\cdot2}{2^4}\\
+&&&= \frac{8-16}{16} = \frac{-8}{16} = -\frac12
+\end{align*}
+\begin{tikzpicture}[remember picture, overlay]
+\hsip{b1}{w1} \hsip{b2}{w2} \hsip{b3}{w3}
+\end{tikzpicture}
+\[
+\vysl{T_3(x) = \frac\pi4+\left(-\frac12\right)(x-1)+\tm{q1}{\frac14}(x-1)^2-\tm{q2}{\frac1{12}}(x-1)^3}
+\]
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north] (k1) at ($(q1.south)+(0,-1.0)$) {$\dfrac{\frac12}{2!}=\dfrac14$};
+\node[anchor=north] (k2) at ($(q2.south)+(0.9,-1.0)$) {$\dfrac{-\frac12}{3!}=\dfrac{-\frac12}{6}=-\dfrac1{12}$};
+\draw[sip] (k1.north) -- ([yshift=-5pt]q1.south);
+\draw[sip] (k2.north -| q2.south) -- ([yshift=-5pt]q2.south);
+\end{tikzpicture}
+\vspace{2.2cm}
+
+\newpage
+\section*{Určete limity:}
+
+\textbf{a)}
+\begin{align*}
+\lim_{x\to\frac\pi2}\frac{\sin2x-2\cos x}{\cos^2x}
+&= \left[\frac{\sin\bigl(\overbrace{\textstyle 2\cdot\frac\pi2}^{\pi}\bigr)-2\cos\frac\pi2}{\cos^2\frac\pi2} = \frac{0-0}{0} = \frac00\right]
+\overset{\text{L.P.}}{=} \lim_{x\to\frac\pi2}\frac{\cos2x\cdot2-2(-\sin x)}{2\cos x\cdot(-\sin x)} =\\
+&= \left[\frac{\bigl(\cos\overbrace{\textstyle 2\cdot\frac\pi2}^{\pi}\bigr)\cdot2+2\sin\frac\pi2}{2\cos\frac\pi2\cdot\left(-\sin\frac\pi2\right)}
+= \frac{2\cos\pi+2\sin\frac\pi2}{-2\cos\frac\pi2\sin\frac\pi2} = \frac{-2+2}{-2\cdot0\cdot1}\right] = \left[\frac00\right] \overset{\text{L.P.}}{=}\\
+&= \lim_{x\to\frac\pi2}\frac{2(-\sin2x)\cdot2+2\cos x}{-2\underbrace{\left(-\sin x\cdot\sin x+\cos x\cdot\cos x\right)}_{(\cos x\sin x)'}} =\\
+&= \frac{-2\bigl(\sin\overset{\pi}{\kruh{2\cdot\frac\pi2}}\bigr)\cdot2+2\cos\frac\pi2}{-2\left(-\sin\frac\pi2\cdot\sin\frac\pi2+\cos\frac\pi2\cdot\cos\frac\pi2\right)}
+= \frac{-2\cdot0\cdot2+2\cdot0}{-2\cdot(-1\cdot1+0\cdot0)} = \frac02 = \vysl{0}
+\end{align*}
+
+\textbf{b)}
+
+\hspace*{3em}$\displaystyle
+\lim_{x\to0}\frac{\tmt{lnq}{\ln\frac{\sin x}{x}}}{1-\cos x} = \frac{\ln1}{1-\cos0} = \frac{0}{1-1} = \left[\frac00\right] \ \text{L.P.}$
+
+\medskip
+\hspace*{3em}\tm{bx}{\boxed{\lim_{x\to0}\frac{\sin x}{x} = \left[\frac00\right] = \lim_{x\to0}\frac{\cos x}{1} = 1}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[draw, ellipse, inner sep=0pt, minimum height=0.8cm, minimum width=1.6cm] (lne) at ([yshift=1pt]lnq) {};
+\draw[sip] ([yshift=1pt]lne.north west) .. controls +(-1.2,0.6) and +(-1.4,0) .. ([xshift=-3pt]bx.west);
+\end{tikzpicture}
+\begin{align*}
+&\overset{\text{L.P.}}{=} \lim_{x\to0}\frac{\frac{1}{\frac{\sin x}{x}}\cdot\left(\frac{\sin x}{x}\right)'}{0-(-\sin x)}
+= \lim_{x\to0}\frac{\frac{1}{\frac{\sin x}{\cancel{x}}}\cdot\frac{\cos x\cdot x-\sin x\cdot1}{\cancel{x^2}}}{\sin x}
+= \lim_{x\to0}\frac{\cos x\cdot x-\sin x}{x\cdot\sin^2x} = \left[\frac00\right] \overset{\text{L.P.}}{=}\\
+&= \lim_{x\to0}\frac{(-\sin x\cdot x+\cos x)-\cos x}{1\cdot\sin^2x+x\cdot2\sin x\cos x}
+= \lim_{x\to0}\frac{-\sin x\cdot x}{\sin^2x+x\cdot2\sin x\cos x} = \lim_{x\to0}\frac{-x}{\sin x+2x\cos x} =\\
+&= \left[\frac00\right] \overset{\text{L.P.}}{=} \lim_{x\to0}\frac{-1}{\underbrace{\cos x}_{1}+\underbrace{2\cos x}_{2\cdot1}+\underbrace{2x\cdot(-\sin x)}_{0}} = \vysl{-\frac13}
+\end{align*}
+
+\newpage
+\section*{Asymptoty:}
+
+\textbf{\textcircled{1} vodorovná pro $f(x)=e^{\frac1x}$}
+\begin{align*}
+\lim_{x\to\infty}e^{\frac1x} &= e^{\frac1\infty\to0} = e^0 = 1\\
+\lim_{x\to-\infty}e^{\frac1x} &= e^{\frac1{-\infty}\to0} = e^0 = 1
+\end{align*}
+\[ \vysl{y=1 \text{ pro } x\to\pm\infty} \]
+
+\hrule
+\medskip
+\textbf{\textcircled{2} svislá pro $f(x)=\tm{fl}{\frac{1}{\ln x}}$}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=west] (n1) at ($(fl.east)+(1.4,0.25)$) {$\ln x\ \dots\ x\in(0,\infty)$};
+\node[anchor=north west, align=left] (n2) at ($(fl.east)+(1.6,-0.35)$) {$\ln x\ne0$\\ $\phantom{\ln}\,x\ne1$};
+\draw[sip] ([xshift=3pt]fl.east) -- ([xshift=-2pt]n1.west);
+\draw[sip] ([xshift=3pt, yshift=-3pt]fl.east) -- ([xshift=-2pt]n2.north west);
+\end{tikzpicture}
+
+\medskip
+\hspace*{1.5em}$D(f)=(0,1)\cup(1,\infty)$
+\[
+\lim_{x\to1}\frac{1}{\ln x} = \left\langle\begin{array}{l}
+\displaystyle\lim_{x\to1^+}\frac{1}{\ln x} = \frac{1}{0^+} = \infty\\[10pt]
+\displaystyle\lim_{x\to1^-}\frac{1}{\ln x} = \frac{1}{0^-} = -\infty
+\end{array}\right\}\quad \vysl{x=1}
+\]
+
+\hrule
+\medskip
+\textbf{\textcircled{3} šikmá pro $f(x)=\dfrac{x^2+1}{x}$}
+\begin{align*}
+a &= \lim_{x\to\infty}\frac{f(x)}{x} = \lim_{x\to\infty}\frac{\frac{x^2+1}{x}}{x} = \lim_{x\to\infty}\frac{x^2+1}{x^2}
+= \left[\frac\infty\infty\right] \overset{\text{L.P.}}{=} \lim_{x\to\infty}\frac{2x}{2x} = 1\\
+b &= \lim_{x\to\infty}\big(f(x)-ax\big) = \lim_{x\to\infty}\left(\frac{x^2+1}{x}-x\right)
+= \lim_{x\to\infty}\frac{x^2+1-x^2}{x} = \lim_{x\to\infty}\frac1x = \frac1\infty = 0
+\end{align*}
+\[
+y=1\cdot x+0 \ \Rightarrow\ \vysl{y=x} \quad \boxed{\begin{array}{l}\text{pro } x\to\infty\\ \text{pro } x\to-\infty\end{array}}
+\]
+\underline{pozn.} $\displaystyle\lim_{x\to-\infty}$ \dots\ stejný výpočet
+
+\end{document}

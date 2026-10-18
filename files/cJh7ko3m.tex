@@ -1,0 +1,85 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+
+% osa s bodem a šipkou ukazující, odkud se blížíme
+\newcommand{\priblizeni}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\draw (-2,0) -- (2,0);
+\draw (0,0.1) -- (0,-0.1) node[below] {$#1$};
+\draw[red!75!black, -{Stealth}] (1.6,-0.35) -- (0.3,-0.35);
+\node[red!75!black, below] at (1.2,-0.4) {\small $#2$};
+\end{tikzpicture}}
+
+\begin{document}
+
+\textbf{c)}
+\[
+\lim_{x\to-3^+} \frac{2-x}{2x^2+5x-3}
+= \left\|\frac{5}{0}\right\|
+= \lim_{x\to-3^+} \frac{2-x}{2\left(x-\frac12\right)(x+3)} =
+\]
+
+Rozklad jmenovatele $2x^2+5x-3$:
+\begin{align*}
+D &= b^2-4ac\\
+D &= 25-4\cdot 2\cdot(-3)\\
+D &= 25+24 = 49\\
+x_{1,2} &= \frac{-b\pm\sqrt{D}}{2a} = \frac{-5\pm 7}{4} =
+\begin{cases} \frac{2}{4} = \frac12\\[3pt] -\frac{12}{4} = -3 \end{cases}
+\end{align*}
+
+\[
+= \frac{5}{2\cdot(-3{,}5)\cdot(0{,}1)} = \frac{5}{0^-} = \vysl{-\infty}
+\qquad
+\priblizeni{-3}{-2{,}9}
+\]
+
+\pozn{Kde mi nevychází nula, tam dosadím rovnou $x=-3$,
+kde vychází nula, tam dám hodnotu $-2{,}9$!
+Abych věděla, zda je to číslo blízko nuly KLADNÉ či ZÁPORNÉ.}
+
+\bigskip
+\textbf{d)}
+\[
+\lim_{x\to4^+} \ln\frac{3x+1}{x^2-4x}
+= \ln\left(\lim_{x\to4^+}\frac{3x+1}{x^2-4x}\right)
+= \ln(+\infty) = +\infty
+\]
+(funkce $\ln x$ roste pro $x\to+\infty$ nade všechny meze)
+
+Vnitřní limita:
+\[
+\lim_{x\to4^+} \frac{3x+1}{x^2-4x}
+= \left\|\frac{13}{0}\right\|
+= \lim_{x\to4^+} \frac{3x+1}{x(x-4)}
+= \frac{13}{4\cdot(0{,}1)}
+= \frac{13}{4\cdot0^+}
+= \frac{13}{0^+}
+= \pozn{+\infty}
+\qquad
+\priblizeni{4}{4{,}1}
+\]
+
+\bigskip
+\textbf{e)}
+\[
+\lim_{x\to-\infty} \left(x^3-x+2\right)
+= \lim_{x\to-\infty} x^3
+= (-\infty)^3 = \vysl{-\infty}
+\]
+
+\end{document}

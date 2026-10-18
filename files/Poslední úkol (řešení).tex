@@ -1,0 +1,165 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\newcommand{\vv}[1]{\overrightarrow{#1}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+
+\begin{document}
+
+\section*{Poslední úkol -- řešení}
+
+\textbf{\textcircled{1}} Jsou dány body $A[1,2,2]$, $B[3,1,2]$, $C[5,1,1]$. Určete
+\begin{enumerate}[label=\alph*), nosep]
+\item rovnici roviny $\alpha=(A,B,C)$,
+\item vektor $\vec x$ délky 12 kolmý k $\alpha$,
+\item vzdálenost $D[4,-1,2]$ od $\alpha$.
+\end{enumerate}
+\hrule
+\medskip
+
+\textbf{a)}\quad $\vv{AB}=B-A=(2,-1,0)$, \qquad $\vv{AC}=C-A=(4,-1,-1)$
+\[
+\vv{AB}\times\vv{AC} = \begin{vmatrix} \vec i & \vec j & \vec k\\ 2 & -1 & 0\\ 4 & -1 & -1 \end{vmatrix} = (1,2,2)
+\]
+\[
+\left.\begin{array}{l}
+\alpha\colon x+2y+2z+d=0\\
+A\in\alpha\colon\ 1+2\cdot2+2\cdot2+d=0 \ \Rightarrow\ d=-9
+\end{array}\right\}\quad \vysl{\alpha\colon x+2y+2z-9=0}
+\]
+
+\textbf{b)}\quad $\vec x=t\cdot\vec n_\alpha=t(1,2,2)=(t,2t,2t)$
+\[
+12=\norm{\vec x}=\sqrt{t^2+(2t)^2+(2t)^2}=\sqrt{9t^2}=3t \ \Rightarrow\ t=4,\qquad \vysl{\vec x=(4,8,8)}
+\]
+
+\textbf{c)}
+\begin{enumerate}[label=\arabic*), nosep]
+\item bodem $D$ kolmice $k$ k $\alpha$: \quad $k\colon\ x=4+t,\ \ y=-1+2t,\ \ z=2+2t$
+\item $k\cap\alpha$:
+\begin{align*}
+4+t+2(-1+2t)+2(2+2t)-9 &= 0\\
+4+t-2+4t+4+4t-9 &= 0\\
+9t &= 3\\
+t &= \tfrac13 \qquad P\left[\tfrac{13}{3},-\tfrac13,\tfrac83\right]
+\end{align*}
+\item vzdálenost $D$ od $\alpha$ $=\norm{\vv{PD}}$:
+\begin{align*}
+\vv{PD} &= D-P = [4,-1,2]-\left[\tfrac{13}{3},-\tfrac13,\tfrac83\right] = \left(-\tfrac13,-\tfrac23,-\tfrac23\right)\\
+\norm{\vv{PD}} &= \sqrt{\left(-\tfrac13\right)^2+\left(-\tfrac23\right)^2+\left(-\tfrac23\right)^2} = \sqrt{\tfrac99} = 1
+\end{align*}
+\pozn{vzdálenost $D$ od $\alpha$ je $\boxed{1}$}
+\end{enumerate}
+
+\bigskip
+\textbf{\textcircled{2}} Objem a výška čtyřstěnu $ABCV$: \quad $A[3,5,3]$, $B[-2,11,-5]$, $C[1,-1,4]$, $V[0,6,4]$
+\hrule
+\medskip
+
+\begin{minipage}{0.3\textwidth}
+\begin{tikzpicture}[scale=1.1]
+\coordinate (A) at (0,0); \coordinate (B) at (1.8,0); \coordinate (C) at (2.2,0.9); \coordinate (V) at (0.8,1.9);
+\draw[thick] (A) -- (B) -- (C) -- (V) -- (A) (V) -- (B);
+\draw[dashed] (A) -- (C);
+\node[below left] at (A) {$A$}; \node[below] at (B) {$B$}; \node[right] at (C) {$C$}; \node[above] at (V) {$V$};
+\end{tikzpicture}
+\end{minipage}%
+\begin{minipage}{0.65\textwidth}
+\begin{align*}
+\vv{AB} &= B-A = (-5,6,-8)\\
+\vv{AC} &= C-A = (-2,-6,1)\\
+\vv{AV} &= V-A = (-3,1,1)
+\end{align*}
+\end{minipage}
+
+\[
+V=\frac16\left|\left[\vv{AB},\vv{AC},\vv{AV}\right]\right| = \frac{189}{6} = \vysl{31{,}5}\ \ \text{\ldots\ objem}
+\]
+\begin{align*}
+\left[\vv{AB},\vv{AC},\vv{AV}\right] &= \begin{vmatrix} -5 & 6 & -8\\ -2 & -6 & 1\\ -3 & 1 & 1 \end{vmatrix}
+= -5\cdot(-6)\cdot1+(-2)\cdot1\cdot(-8)+(-3)\cdot6\cdot1-\\
+&\quad-(-8)\cdot(-6)\cdot(-3)-1\cdot1\cdot(-5)-1\cdot6\cdot(-2) =\\
+&= 30+16-18+144+5+12 = 189
+\end{align*}
+\[
+V=\frac13S_p\cdot v \ \Rightarrow\ v=\frac{3V}{S_p} \overset{(*)}{=}
+\]
+\[
+S_p=S_{\triangle ABC}=\frac12\norm{\vv{AB}\times\vv{AC}}=\frac12\sqrt{(-42)^2+21^2+42^2}=\frac12\sqrt{3969}=\frac12\cdot63
+\]
+\[
+\vv{AB}\times\vv{AC} = \begin{vmatrix} \vec i & \vec j & \vec k\\ -5 & 6 & -8\\ -2 & -6 & 1 \end{vmatrix} = (-42,21,42)
+\]
+\[
+(*) = \frac{3\cdot\frac{189}{6}}{\frac12\cdot63} = \vysl{3}\ \ \text{\ldots\ výška}
+\]
+
+\bigskip
+\textbf{\textcircled{3}} Vzdálenost rovnoběžných rovin $\alpha$ a $\beta$: \quad $\alpha\colon x-3z+2=0$, \quad $\beta\colon 2x-6z-7=0$
+\hrule
+\medskip
+
+$\vec n_\alpha=\vec n_\beta=(1,0,-3)$
+\begin{enumerate}[label=\arabic*), nosep]
+\item $A\in\alpha$ libovolný \ldots\ $A\left[0,0,\frac23\right]$
+\item $k\perp\alpha$, $A\in k$ \ldots\ $k=A+t\,\vec n_\alpha$: \quad $x=t,\ \ y=0,\ \ z=\frac23-3t$
+\item $k\cap\beta=B$:
+\begin{align*}
+2t-6\left(\tfrac23-3t\right)-7 &= 0\\
+2t-4+18t-7 &= 0\\
+20t &= 11 \ \Rightarrow\ t=\tfrac{11}{20}
+\end{align*}
+$B\left[\frac{11}{20},0,\frac23-\frac{33}{20}\right]$
+\item \pozn{vzdálenost $\alpha$ a $\beta$} $=\norm{\vv{AB}}$:
+\begin{align*}
+\vv{AB} &= B-A = \left[\tfrac{11}{20},0,\tfrac23-\tfrac{33}{20}\right]-\left[0,0,\tfrac23\right] = \left(\tfrac{11}{20},0,-\tfrac{33}{20}\right)\\
+\norm{\vv{AB}} &= \sqrt{\left(\tfrac{11}{20}\right)^2+0^2+\left(-\tfrac{33}{20}\right)^2} = \sqrt{\tfrac{1210}{400}} = \sqrt{\tfrac{121}{40}} = \vysl{\frac{11}{2\sqrt{10}}}
+\end{align*}
+\end{enumerate}
+
+\end{document}

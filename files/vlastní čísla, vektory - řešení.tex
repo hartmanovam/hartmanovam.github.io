@@ -1,0 +1,127 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\newcommand{\vv}[1]{\overrightarrow{#1}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+
+\begin{document}
+
+\section*{Vlastní čísla, vektory -- řešení}
+
+\textbf{\textcircled{1}} Ověřte, že $\lambda=9$ je vlastní číslo matice
+$A=\begin{pmatrix} 7 & -2 & -2\\ -2 & 1 & 4\\ -2 & 4 & 1 \end{pmatrix}$
+a určete odpovídající vlastní vektor.
+
+\hrule
+\medskip
+{\color{blue!60!black}Stačí určit, zda $|A-\lambda E|=0$ pro $\lambda=9$:}
+\[
+\begin{vmatrix} 7-9 & -2 & -2\\ -2 & 1-9 & 4\\ -2 & 4 & 1-9 \end{vmatrix}
+= \begin{vmatrix} -2 & -2 & -2\\ -2 & -8 & 4\\ -2 & 4 & -8 \end{vmatrix}
+\ \krok{$R_2+(-1)R_1,\ R_3+(-1)R_1$}\ =
+\]
+\[
+= \begin{vmatrix} -2 & -2 & -2\\ 0 & -6 & 6\\ 0 & 6 & -6 \end{vmatrix}
+\ \krok{$R_3+R_2$}\ =
+\underbrace{\begin{vmatrix} -2 & -2 & -2\\ 0 & -6 & 6\\ 0 & 0 & 0 \end{vmatrix}}_{(*)}
+= \vysl{0}
+\]
+$\Rightarrow$ \pozn{$\lambda=9$ je vlastní číslo.}
+
+{\color{blue!60!black}Vlastní vektor: $(A-\lambda E)\vec x=\vec o$ pro $\lambda=9$:}
+\[
+(*)\quad
+\begin{pmatrix} -2 & -2 & -2\\ 0 & -6 & 6\\ 0 & 0 & 0 \end{pmatrix}
+\begin{pmatrix} x_1\\ x_2\\ x_3 \end{pmatrix} = \begin{pmatrix} 0\\ 0\\ 0 \end{pmatrix}
+\]
+\begin{align*}
+-2x_1-2x_2-2x_3 &= 0\\
+-6x_2+6x_3 &= 0
+\end{align*}
+\begin{align*}
+x_3 &= t\\
+-6x_2+6x_3 &= 0\\
+6x_2 &= 6x_3\\
+x_2 = x_3 &= t\\
+-2x_1-2t-2t &= 0 \ \Rightarrow\ 2x_1=-4t \ \Rightarrow\ x_1=-2t
+\end{align*}
+\pozn{vlastní vektor:} \quad $\vysl{\begin{pmatrix} -2t\\ t\\ t \end{pmatrix}}$
+
+\bigskip
+\hrule
+\medskip
+
+\textbf{\textcircled{2}} Jsou dány body: $A[1,2,2]$, $B[3,1,2]$, $C[5,1,1]$.
+
+\textbf{\pozn{a) úhel $ABC$}} $=$ úhel vektorů $\vv{BA}$, $\vv{BC}$:
+\begin{align*}
+\vv{BA} &= A-B = (-2,1,0)\\
+\vv{BC} &= C-B = (2,0,-1)\\
+\cos\varphi &= \frac{\vv{BA}\cdot\vv{BC}}{\norm{\vv{BA}}\cdot\norm{\vv{BC}}}
+= \frac{(-2,1,0)\cdot(2,0,-1)}{\sqrt{(-2)^2+1^2+0^2}\cdot\sqrt{2^2+0^2+(-1)^2}}
+= \frac{-2\cdot2+1\cdot0+0\cdot(-1)}{\sqrt5\cdot\sqrt5} = -\frac45
+\end{align*}
+\[
+\pozn{\sphericalangle ABC=\varphi=\arccos\left(-\frac45\right)}
+\]
+
+\textbf{\pozn{b) obsah $\triangle ABC$:}}
+\[
+S_\triangle = \frac12\norm{\vv{BA}\times\vv{BC}} = \frac12\sqrt{(-1)^2+(-2)^2+(-2)^2} = \frac12\cdot\sqrt9 = \vysl{\frac32}
+\]
+\[
+\vv{BA}\times\vv{BC} = \begin{vmatrix} \vec i & \vec j & \vec k\\ -2 & 1 & 0\\ 2 & 0 & -1 \end{vmatrix}
+= \vec i\cdot(-1-0)-\vec j\cdot(2-0)+\vec k\cdot(0-2) = (-1,-2,-2)
+\]
+
+\textbf{\pozn{c) délka úsečky $AB$:}}
+\[
+|AB| = \norm{\vv{AB}} = \norm{\vv{BA}} = \sqrt{(-2)^2+1^2+0^2} = \vysl{\sqrt5}
+\]
+
+\end{document}

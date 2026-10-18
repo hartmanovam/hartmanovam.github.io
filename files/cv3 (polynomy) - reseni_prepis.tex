@@ -1,0 +1,205 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,matrix,decorations.pathreplacing,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+% Hornerovo schéma jako TikZ matice: řádek 1 = koeficienty, další řádky = kořeny,
+% poslední řádek = podílový polynom zapsaný pod koeficienty
+\tikzset{hm/.style={matrix of math nodes, nodes in empty cells, column sep=0pt, row sep=0pt,
+  nodes={minimum width=2.7em, minimum height=1.55em, anchor=center, inner sep=1pt}}}
+% \hornerlines{matice}{poslední řádek schématu}{počet sloupců}{poslední sloupec pod závorkou}
+\newcommand{\hornerlines}[4]{%
+  \pgfmathtruncatemacro{\hlR}{#2-1}\pgfmathtruncatemacro{\hlN}{#3-1}%
+  \foreach \i in {1,...,\hlR} \draw (#1-\i-1.south west) -- (#1-\i-#3.south east);
+  \foreach \j in {1,...,\hlN} \draw (#1-1-\j.north east) -- (#1-#2-\j.south east);
+  \draw[decorate, decoration={brace, mirror, amplitude=4pt}]
+    ([yshift=-2pt]#1-#2-2.south west) -- ([yshift=-2pt]#1-#2-#4.south east);}
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+
+\newenvironment{hb}{\par\smallskip\centering}{\par\vspace{-1.6\baselineskip}}
+
+\begin{document}
+
+\section*{Kořeny, rozklad, znaménko polynomu}
+
+\textbf{a)}\quad $3x^3-5x^2-4x+4$ \qquad (možné kořeny: $\pm1,\pm2,\pm4$)
+\begin{hb}
+\begin{tikzpicture}
+\matrix (m) [hm] {
+  & 3 & -5 & -4 & 4\\
+2 & 3 & 1 & -2 & 0\\[0.3cm]
+  & 3x^2 & +x & -2 & \\};
+\hornerlines{m}{2}{5}{4}
+\node[anchor=west] at (m-2-5.east) {$\to\ (x-2)$};
+\node[anchor=base west] at (m-3-4.base east) {$=3(x+1)\left(x-\frac23\right)$};
+\end{tikzpicture}
+\end{hb}
+\begin{align*}
+D &= 1^2-4\cdot3\cdot(-2)=1+24=25\\
+x_{1,2} &= \frac{-1\pm5}{3\cdot2}=\begin{cases}-\frac66=-1\\[2pt] \frac46=\frac23\end{cases}
+\end{align*}
+rozklad: $3(x-2)(x+1)\left(x-\frac23\right)$\\
+kořeny: $x_1=2$, $x_2=-1$, $x_3=\frac23$\\
+znaménko: \znam{a/-1/x,b/\frac23/x,c/2/x}{-,+,-,+}
+
+\medskip\hrule\medskip
+\textbf{b)}\quad $3x^3-8x^2+7x-2$ \qquad (možné kořeny: $\pm1,\pm2$)
+\begin{hb}
+\begin{tikzpicture}
+\matrix (m) [hm] {
+  & 3 & -8 & 7 & -2\\
+1 & 3 & -5 & 2 & 0\\[0.3cm]
+  & 3x^2 & -5x & +2 & \\};
+\hornerlines{m}{2}{5}{4}
+\node[anchor=west] at (m-2-5.east) {$\to\ (x-1)$};
+\node[anchor=base west] at (m-3-4.base east) {$=3(x-1)\left(x-\frac23\right)$};
+\end{tikzpicture}
+\end{hb}
+\begin{align*}
+D &= (-5)^2-4\cdot3\cdot2=25-24=1\\
+x_{1,2} &= \frac{5\pm1}{2\cdot3}=\begin{cases}\frac66=1\\[2pt] \frac46=\frac23\end{cases}
+\end{align*}
+kořeny: $x_1=1$, $x_2=1$, $x_3=\frac23$\\
+rozklad: $3(x-1)^2\left(x-\frac23\right)$\\
+znaménko:
+\begin{tikzpicture}[baseline=-3pt]
+\draw (0,0) -- (4.8,0);
+\draw (1.6,0.1) -- (1.6,-0.1); \draw (3.2,0.1) -- (3.2,-0.1);
+\node[below=2pt] at (1.6,0) {\small $\frac23$};
+\node[below=2pt, draw, circle, inner sep=1pt] (r1) at (3.2,0) {\small $1$};
+\node[above] at (0.8,0) {$-$}; \node[above] at (2.4,0) {$+$}; \node[above] at (4.0,0) {$+$};
+\node[anchor=west] (t1) at ($(r1.east)+(0.8,0)$) {dvojnásobný};
+\node[anchor=north west, inner sep=0pt] at ($(t1.south west)+(0.1,0)$) {\small(nemění znaménko)};
+\draw[-{Stealth}] (r1.east) -- (t1.west);
+\end{tikzpicture}
+
+\newpage
+\textbf{c)}\quad $x^4+3x^3-7x^2-9x+12$ \qquad (možné kořeny: $\pm1,\pm2,\pm3,\pm4,\pm6,\pm12$)
+\begin{hb}
+\begin{tikzpicture}
+\matrix (m) [hm] {
+   & 1 & 3 & -7 & -9 & 12\\
+ 1 & 1 & 4 & -3 & -12 & 0\\
+-4 & 1 & 0 & -3 & 0 & \\[0.3cm]
+   & x^2 & {\color{gray}+0x} & -3 & & \\};
+\hornerlines{m}{3}{6}{4}
+\node[anchor=west] at (m-2-6.east) {$\to\ (x-1)$};
+\node[anchor=west] at (m-3-6.east) {$\to\ (x+4)$};
+\node[anchor=base west] at (m-4-4.base east) {$=0$};
+\end{tikzpicture}
+\end{hb}
+\begin{align*}
+x^2-3&=0\\
+x^2&=3\\
+x&=\pm\sqrt3
+\end{align*}
+kořeny: $x_1=1$, $x_2=-4$, $x_3=\sqrt3$, $x_4=-\sqrt3$\\
+rozklad: $(x-1)(x+4)\left(x-\sqrt3\right)\left(x+\sqrt3\right)$\\
+znaménko: \znam{a/-4/x,b/-\sqrt3/x,c/1/x,d/\sqrt3/x}{+,-,+,-,+}
+
+\medskip\hrule\medskip
+\textbf{d)}\quad $x^4-2x^3+2x-1$ \qquad (možné kořeny: $\pm1$)
+\begin{hb}
+\begin{tikzpicture}
+\matrix (m) [hm] {
+  & 1 & -2 & 0 & 2 & -1\\
+1 & 1 & -1 & -1 & 1 & 0\\
+1 & 1 & 0 & -1 & 0 & \\[0.3cm]
+  & x^2 & {\color{gray}+0x} & -1 & & \\};
+\hornerlines{m}{3}{6}{4}
+\node[anchor=west] at (m-2-6.east) {$\to\ (x-1)$};
+\node[anchor=west] at (m-3-6.east) {$\to\ (x-1)$};
+\node[anchor=base west] at (m-4-4.base east) {$=0$};
+\end{tikzpicture}
+\end{hb}
+\[ (x-1)(x+1)=0 \]
+kořeny: $x_{1,2,3}=1$ (trojnásobný), $x_4=-1$\\
+rozklad: $(x-1)^3(x+1)$\\
+znaménko: \znam{a/-1/x,b/1/x}{+,-,+}
+
+\newpage
+\textbf{e)}\quad $2x^3-3x^2-3x+2$ \qquad (možné kořeny: $\pm1,\pm2$)
+\begin{hb}
+\begin{tikzpicture}
+\matrix (m) [hm] {
+   & 2 & -3 & -3 & 2\\
+-1 & 2 & -5 & 2 & 0\\[0.3cm]
+   & 2x^2 & -5x & +2 & \\};
+\hornerlines{m}{2}{5}{4}
+\node[anchor=west] at (m-2-5.east) {$\to\ (x+1)$};
+\node[anchor=base west] at ($(m-3-4.base east)+(1.2,0)$) {$D=(-5)^2-4\cdot2\cdot2=9$};
+\end{tikzpicture}
+\end{hb}
+\[
+x_{1,2}=\frac{5\pm3}{2\cdot2}=\begin{cases}\frac84=2\\[2pt] \frac24=\frac12\end{cases}
+\]
+kořeny: $x_1=-1$, $x_2=2$, $x_3=\frac12$\\
+rozklad: $2(x+1)(x-2)\left(x-\frac12\right)$\\
+znaménko: \znam{a/-1/x,b/\frac12/x,c/2/x}{-,+,-,+}
+
+\medskip\hrule\medskip
+\textbf{f)}\quad $2x^4-x^3+2x^2-3x = \tm{fx}{x}\left(2x^3-x^2+2x-3\right)$ \qquad (možné kořeny: $\pm1,\pm3$)
+\begin{hb}
+\begin{tikzpicture}[remember picture]
+\matrix (m) [hm] {
+  & 2 & -1 & 2 & -3\\
+1 & 2 & 1 & 3 & 0\\[0.3cm]
+  & 2x^2 & +x & +3 & \\};
+\hornerlines{m}{2}{5}{4}
+\node[anchor=east] (x2) at ($(m-2-1.west)+(-1.3,0)$) {$x_2=1$};
+\node[anchor=east] (x1) at ($(m-1-1.west)+(-1.3,0.05)$) {$x_1=0$};
+\draw[-{Stealth}] (m-2-1.west) -- (x2.east);
+\end{tikzpicture}
+\begin{tikzpicture}[remember picture, overlay]
+\draw[-{Stealth}] ([yshift=-1pt]fx.south) to[out=-100, in=80] ($(x1.north west)+(0.2,-0.03)$);
+\end{tikzpicture}
+\end{hb}
+\[ D=1^2-4\cdot2\cdot3<0 \ \text{-- nemá reálné kořeny} \]
+kořeny: $x_1=0$, $x_2=1$\\
+rozklad: $x(x-1)\left(2x^2+x+3\right)$\\
+znaménko: \znam{a/0/x,b/1/x}{+,-,+}
+
+\end{document}

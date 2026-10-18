@@ -1,0 +1,180 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+\usepackage{multicol}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries\underline{Elipsa}}
+\end{center}
+
+\textbf{DEF:} Elipsa je množina všech bodů, které mají od dvou pevných různých bodů stálý součet vzdáleností větší než vzdálenost pevných bodů.
+
+Oba pevné body se nazývají \underline{ohniska}; obvykle je značíme $F_1$, $F_2$ (nebo $E$, $F$).\\
+Vzdálenost bodu od ohniska se nazývá \underline{průvodič}; značíme $r_1$, $r_2$.\\
+(Také spojnici bodu s ohniskem říkáme průvodič.)
+
+\begin{center}
+\begin{tikzpicture}[scale=0.55, every node/.style={font=\footnotesize}]
+\draw (-3,0) -- (3,0); \draw (0,-2.2) -- (0,2.2);
+\draw (0,0) ellipse (2.2 and 1.2);
+\coordinate (F1) at (-1.8,0); \coordinate (F2) at (1.8,0); \coordinate (X) at (1.2,1.0);
+\draw[dashed] (F1) -- (X) node[midway, above] {$r_1$} -- (F2) node[midway, above right] {$r_2$};
+\fill (F1) circle (2pt) node[below] {$F_1$}; \fill (F2) circle (2pt) node[below] {$F_2$};
+\node at (-2.2,1.4) {$e$};
+\begin{scope}[xshift=8cm]
+\draw (-3,0) -- (3,0); \draw (0,-2.2) -- (0,2.5);
+\draw (0,0) ellipse (2.2 and 1.2);
+\coordinate (F1) at (-1.837,0); \coordinate (F2) at (1.837,0);
+\draw[dashed] (F1) -- (0,1.2) node[midway, above left] {$a$};
+\fill (F1) circle (2pt) node[below] {$F_1$}; \fill (F2) circle (2pt) node[below] {$F_2$};
+\node[left] at (-2.2,0) {$A$}; \node[right] at (2.2,0) {$B$};
+\node[above right] at (0,1.2) {$C$}; \node[below right] at (0,-1.2) {$D$};
+\node[below right] at (0,0) {$S$};
+\node[above] at (-0.9,0) {$e$}; \node[below] at (-1,0) {$a$}; \node[above] at (0.9,0) {$e$};
+\node[right] at (0,0.6) {$b$};
+\node[above] at (0,2.6) {\fbox{\fbox{$a^2=e^2+b^2$}}};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{multicols}{2}
+\begin{itemize}[nosep, label={}]
+\item $|AS|=|SB|=a$
+\item $a$ \dots\ hlavní poloosa
+\item $|SC|=|SD|=b$
+\item $b$ \dots\ vedlejší poloosa
+\item $|F_1S|=|SF_2|=e$
+\item $e$ \dots\ excentricita (výstřednost)
+\item $A$, $B$ \dots\ hlavní vrcholy elipsy
+\item $C$, $D$ \dots\ vedlejší vrcholy elipsy
+\item ohniska \dots\ $F_1$, $F_2$
+\item střed \dots\ $S$
+\end{itemize}
+\end{multicols}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.15, every node/.style={font=\small}]
+\def\a{4} \def\b{2.4}
+\coordinate (S) at (0,0);
+\coordinate (A) at (-4,0); \coordinate (B) at (4,0); \coordinate (C) at (0,2.4); \coordinate (D) at (0,-2.4);
+\coordinate (F1) at (-3.2,0); \coordinate (F2) at (3.2,0); \coordinate (J) at (1.9,0);
+\coordinate (M) at (2.375,1.931); \coordinate (P) at (3.780,1.309); \coordinate (Q) at (4.359,2.619);
+\coordinate (S1) at (-2.56,0); \coordinate (Sc) at (0,-4.267);
+% osy
+\draw (-5,0) -- (5.2,0);
+\draw (0,-4.6) -- (0,3.3);
+% elipsa
+\draw[thick] (S) ellipse (4 and 2.4);
+% oskulační kružnice -- konstrukce středů
+\draw[dashed] (-4,0) -- (-4,2.4) -- (0,2.4);
+\draw[dash dot] (-4.6,-0.345) -- (0.6,2.745); % úhlopříčka AC
+\draw[dash dot] (-4,2.4) -- (0.25,-4.75);
+\draw (-4.15,0.75) arc (150:210:1.44+0.06); % náznak oskulační kružnice v A
+\draw (-0.9,2.34) arc (98:82:6.67); % náznak v C
+% kružnice g a v (oblouky)
+\draw (2.2,-0.9) ++(0,0) ; 
+\draw ([shift={(-3.2,0)}]8:8) arc (8:30:8) node[pos=0.3, right] {$g$};
+\draw[thick] ([shift={(0,0)}]10:4) arc (10:58:4);
+\node at (1.8,3.85) {$v$};
+% průvodiče
+\draw[dashed] (F1) -- (M) node[pos=0.4, above] {$r_1$};
+\draw[dashed] (F2) -- (M) node[midway, right] {$r_2$};
+% kružnice k1, k2 (oblouky)
+\draw (M) ++(70:0.6) arc (70:110:0.6);
+\draw ([shift={(-3.2,0)}]15:5.9) arc (15:24:5.9) node[below left] {$k_1$};
+\draw ([shift={(3.2,0)}]100:2.1) arc (100:125:2.1) node[left] {$k_2$};
+% tečna
+\draw[thick] ($(M)!-1.7!(P)$) -- ($(M)!1.35!(P)$) node[right] {$t$};
+% kolmice, souměrnost
+\draw (F2) -- (Q);
+\draw (M) -- (Q);
+% body
+\foreach \P/\pos/\l in {A/below left/A, B/below right/B, C/above left/C, D/below right/D, S/below left/S,
+  F1/below/F_1, F2/below/F_2, M/above/M, P/right/P, Q/above right/Q, S1/below/S_1, Sc/right/S_C, J/below/1} {
+  \fill (\P) circle (1.3pt); \node[\pos] at (\P) {$\l$};
+}
+% další body elipsy
+\foreach \x/\y/\l/\pos in {2.375/-1.931/M'/below right, -2.375/1.931/M''/above left, -2.375/-1.931/M'''/below left} {
+  \draw (\x-0.15,\y-0.15) -- (\x+0.15,\y+0.15) (\x-0.15,\y+0.15) -- (\x+0.15,\y-0.15);
+  \node[\pos] at (\x,\y) {$\l$};
+}
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\fbox{$k_1(F_1;\ r_1=|A1|)$; \ $k_2(F_2;\ r_2=|1B|)$; \quad $k_1\cap k_2=M$ \dots\ bod elipsy}
+\end{center}
+
+\begin{multicols}{2}
+\begin{itemize}[nosep, label={}]
+\item $|AB|=2a$ \dots\ hlavní osa
+\item $|CD|=2b$ \dots\ vedlejší osa
+\item $r_1$, $r_2$ \dots\ průvodiče bodu $M$
+\item $r_1+r_2=2a$
+\item $t$ \dots\ tečna elipsy v bodě $M$ (tečna půlí úhel průvodičů)
+\item[\textbf{!}] $|F_2P|=|PQ|$ \textbf{!}
+\item $Q$ \dots\ bod souměrný s ohniskem elipsy podle tečny
+\item $g(F_1;\,2a)$ \dots\ kružnice, na níž leží body $Q$
+\item $g$ \dots\ řídicí kružnice elipsy (jsou 2)
+\item $S_1$, $S_C$ \dots\ středy oskulačních kružnic
+\item $P$ \dots\ pata kolmice z ohniska na tečnu
+\item $v(S;\,a)$ \dots\ kružnice, na níž leží body $P$
+\item $v$ \dots\ vrcholová kružnice elipsy
+\end{itemize}
+\end{multicols}
+
+\begin{description}[nosep, leftmargin=2em, labelwidth=1.5em]
+\item[V:] Elipsa je souměrná podle dvou k sobě kolmých os a středově souměrná podle jejich průsečíku.
+\item[V:] Součet průvodičů bodu elipsy se rovná velikosti její hlavní osy.
+\item[V:] V každém bodě elipsy existuje právě jedna tečna; je to osa vnějších úhlů jeho průvodičů.
+\item[V:] Množina všech bodů souměrně sdružených s jedním ohniskem elipsy podle jejích tečen je kružnice se středem v druhém ohnisku a poloměrem rovným velikosti hlavní osy elipsy.
+\item[V:] Množina všech pat kolmic spuštěných z ohnisek elipsy na její tečny je kružnice opsaná kolem středu elipsy poloměrem rovným velikosti hlavní poloosy.
+\end{description}
+
+\end{document}

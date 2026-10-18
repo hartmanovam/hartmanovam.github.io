@@ -1,0 +1,158 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,shapes.geometric,babel}
+\setlength{\mathindent}{1.5em}
+% červeně zakroužkovaný a přeškrtnutý výraz
+\newcommand{\kr}[1]{\mathpalette\krA{#1}}
+\newcommand{\krA}[2]{\tikz[baseline=(k.base)]\node[draw=red!75!black, ellipse, inner sep=0pt] (k) {$#1#2$};}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+\newcommand{\cerv}[1]{{\color{red!75!black}#1}}
+% značka pro šipky (2 průchody pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+% malý graf ln x
+\newcommand{\lngraf}{\begin{tikzpicture}[scale=0.45]
+\draw[-{Stealth}] (-0.6,0) -- (2.8,0);
+\draw[-{Stealth}] (0,-1.4) -- (0,1.4);
+\draw[thick, domain=0.25:2.7, samples=40] plot (\x, {ln(\x)}) node[right, font=\scriptsize] {$\ln$};
+\end{tikzpicture}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+
+\newcommand{\priblizeni}[3]{%
+\begin{tikzpicture}[baseline=-3pt]
+\draw (-1.5,0) -- (1.5,0);
+\draw (0,0.1) -- (0,-0.1) node[below] {$#1$};
+\draw[red!75!black, -{Stealth}] (1.2,-0.3) -- (0.3,-0.3) node[midway, above] {\small $#2$};
+\node[red!75!black, below] at (0.9,-0.35) {\small $#3$};
+\end{tikzpicture}}
+
+\begin{document}
+
+\section*{Z grafu funkce určete limity}
+
+\textbf{a)}\quad
+$\displaystyle\lim_{x\to\infty}e^x=\vysl{\infty}$
+\qquad
+$\displaystyle\lim_{x\to-\infty}e^x=\vysl{0}$
+\qquad
+$\displaystyle\lim_{x\to0}e^x=\vysl{1}$
+\qquad
+\pozn{$\Big($}$\displaystyle\lim_{x\to1}e^x=\vysl{e}$\pozn{$\Big)$ lze počítat i dosazením}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=6cm, height=4.5cm, clip=false,
+  xmin=-2.5, xmax=2, ymin=-0.8, ymax=4.5, xtick={1}, ytick={1,2.71828}, yticklabels={$1$,$e$}]
+\addplot[thick, domain=-2.5:1.5, samples=60] {exp(x)} node[right] {$e^x$};
+\addplot[only marks, mark=*] coordinates {(0,1)};
+\draw[dotted] (axis cs:0,2.71828) -- (axis cs:1,2.71828) -- (axis cs:1,0);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\textbf{b)}\quad
+$\displaystyle\lim_{x\to\infty}\arccotg x=\vysl{0}$
+\qquad
+$\displaystyle\lim_{x\to-\infty}\arccotg x=\vysl{\pi}$
+
+\begin{minipage}{0.5\textwidth}
+\pozn{$\Big($}$\displaystyle\lim_{x\to1}\arccotg x=\arccotg1=\pozn{45^\circ=\frac\pi4}$\pozn{$\Big)$}\\[4pt]
+\begin{tikzpicture}[scale=0.85]
+\node[red!75!black, align=left, anchor=east] at (-1.6,-0.6) {určíme\\ z jednotkové kružnice};
+\draw (-1.4,0) -- (1.5,0);
+\draw (0,-1.3) -- (0,1.5);
+\draw (0,0) circle (1);
+\draw (-1.4,1) -- (1.7,1) node[right] {\small $\arccotg$};
+\draw (1,1.5) -- (1,-1.3);
+\fill (0,1) circle (1.5pt);
+\fill (1,1) circle (1.8pt) node[above right=-1pt] {\small $1$};
+\draw[red!75!black, dashed] (0,0) -- (1,1);
+\fill[red!75!black] (45:1) circle (1.8pt);
+\draw[red!75!black] (0.35,0) arc (0:45:0.35);
+\node[red!75!black, font=\scriptsize] at (18:0.62) {$45^\circ$};
+\end{tikzpicture}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=8cm, height=4.5cm, clip=false,
+  xmin=-6, xmax=6, ymin=-0.6, ymax=3.8, xtick=\empty, ytick={1.5708,3.1416}, yticklabels={$\frac{\pi}{2}$,$\pi$}]
+\addplot[dashed, domain=-6:6] {pi};
+\addplot[thick, domain=-6:6, samples=100] {pi/2 - rad(atan(x))} node[right] {$\arccotg$};
+\addplot[only marks, mark=*] coordinates {(0,1.5708)};
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+
+\section*{Vypočti:}
+
+\textbf{a)}\quad $\displaystyle
+\lim_{x\to\infty}e^{\tfrac{2x}{x^2-1}} = e^{\lim\limits_{x\to\infty}\tfrac{\kr{2x}}{\kr{x^2}-1}} = e^{\lim\limits_{x\to\infty}\tfrac{2\cancel{x}}{x^{\cancel{2}}}}
+= e^{\lim\limits_{x\to\infty}\tfrac2x} = e^0 = \vysl{1}
+$
+
+
+\textbf{b)}\quad $\displaystyle
+\lim_{x\to\infty}\frac{\kr{3x^4}-2}{\kr{2x^4}+x-3} = \lim_{x\to\infty}\frac{3\cancel{x^4}}{2\cancel{x^4}} = \vysl{\frac32}
+$
+
+
+\textbf{c)}
+\[
+\lim_{x\to-3^+}\frac{2-x}{\tm{den}{\cerv{2}x^2+5x-3}} = \left[\frac50\right] = \lim_{x\to-3^+}\frac{2-x}{\cerv{2}(x+3)\left(x-\frac12\right)}
+= \lim_{x\to-3^+}\frac{1}{x+3}\cdot\lim_{x\to-3^+}\frac{2-x}{2\left(x-\frac12\right)} =
+\]
+\begin{minipage}{0.55\textwidth}
+\begin{align*}
+D &= \tm{Dl}{25-4\cdot2\cdot(-3)} = 49\\
+x_{1,2} &= \frac{-5\pm\sqrt{49}}{4} = \frac{-5\pm7}{4} = \begin{cases}-3\\ \frac24=\frac12\end{cases}
+\end{align*}
+\end{minipage}%
+\begin{minipage}{0.4\textwidth}
+\priblizeni{-3}{+}{(x+3)>0}
+\end{minipage}
+\begin{tikzpicture}[remember picture, overlay]
+\draw[-{Stealth}] ([yshift=-2pt]den.south) -- ([yshift=3pt]Dl.north);
+\end{tikzpicture}
+\[
+= \frac{1}{0^+}\cdot\frac{5}{2\left(-3-\frac12\right)} = \infty\cdot\frac{5}{2\cdot\left(-\frac72\right)} = \infty\cdot\left(-\frac57\right) = \vysl{-\infty}
+\]
+
+\textbf{d)}
+\begin{align*}
+\lim_{x\to4^+}\ln\frac{3x+1}{x^2-4x} &= \ln\lim_{x\to4^+}\frac{3x+1}{x^2-4x} = \ln\lim_{x\to4^+}\frac{3x+1}{x(x-4)}
+= \ln\left(\lim_{x\to4^+}\frac{1}{x-4}\cdot\lim_{x\to4^+}\frac{3x+1}{x}\right) =\\
+&= \ln\left(\frac{1}{0^+}\cdot\frac{3\cdot4+1}{4}\right) = \ln\left(\infty\cdot\frac{13}{4}\right) = \tm{lninf}{\ln\infty} = \vysl{\infty}
+\qquad \priblizeni{4}{}{(x-4)>0}
+\end{align*}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, inner sep=0pt] at ([yshift=-4pt]lninf.south) {\lngraf};
+\end{tikzpicture}
+\vspace{0.9cm}
+
+
+\textbf{e)}\quad $\displaystyle
+\lim_{x\to-\infty}\left(\kr{x^3}-x+2\right) = (-\infty)^3 = \vysl{-\infty}
+$
+
+\end{document}

@@ -1,0 +1,154 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,decorations.pathreplacing,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+% značka pro šipky mezi částmi textu (vyžaduje 2 průchody pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\begin{document}
+
+\section*{Definiční obor složené funkce:}
+
+\textbf{\textcircled{1}}\quad $f(x)=\tm{h1}{\ln(2x+10)}+\tm{h2}{\arccos(x+5)}$
+\vspace{5mm}
+
+\begin{minipage}[t]{0.45\textwidth}
+\begin{align*}
+\tm{t1a}{2x+10} &> \tm{t1b}{0}\\
+2x &> -10\\
+x &> -5
+\end{align*}
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}
+\begin{align*}
+\tm{t2a}{-1\le x+5} &\le \tm{t2b}{1} \qquad \big/-5\\
+-6\le x &\le -4
+\end{align*}
+\end{minipage}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+\draw (-7,0) -- (-3,0);
+\fill[pattern=north east lines, pattern color=red!75!black] (-5,0) rectangle (-4,0.25);
+\draw (-6,0) -- (-6,0.35) -- (-4,0.35) -- (-4,0); % arccos
+\draw (-5,0.6) -- (-3,0.6); \draw (-5,0) -- (-5,0.6); % ln
+\draw[fill=white] (-5,0) circle (2pt);
+\fill (-6,0) circle (2pt); \fill (-4,0) circle (2pt);
+\node[below] at (-6,0) {$-6$}; \node[below] at (-5,0) {$-5$}; \node[below] at (-4,0) {$-4$};
+\end{tikzpicture}
+\end{center}
+\[ \vysl{D(f)=(-5,-4\rangle} \]
+\begin{tikzpicture}[remember picture, overlay]
+\draw[-{Stealth}, semithick] ([yshift=-2pt]h1.south) -- ($(t1a.north west)!0.5!(t1b.north east)+(0,0.22)$);
+\draw[-{Stealth}, semithick] ([yshift=-2pt]h2.south) -- ($(t2a.north west)!0.5!(t2b.north east)+(0,0.22)$);
+\end{tikzpicture}
+
+\hrule
+\medskip
+\textbf{\textcircled{2}}\quad $f(x)=\tm{h3}{\arctg x^2}+\tm{h4}{\arcsin(3-x)}$
+\vspace{5mm}
+
+\begin{minipage}[t]{0.45\textwidth}
+\[ \tm{t3}{x\in\mathbb{R}} \]
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}
+\begin{align*}
+\tm{t4a}{-1\le 3-x} &\le \tm{t4b}{1} \qquad \big/-3\\
+-4\le -x &\le -2 \qquad \big/\cdot(-1)\\
+4\ge x &\ge 2
+\end{align*}
+\end{minipage}
+\[ \vysl{D(f)=\langle2,4\rangle} \]
+\begin{tikzpicture}[remember picture, overlay]
+\draw[-{Stealth}, semithick] ([yshift=-2pt]h3.south) -- ([yshift=5pt]t3.north);
+\draw[-{Stealth}, semithick] ([yshift=-2pt]h4.south) -- ($(t4a.north west)!0.5!(t4b.north east)+(0,0.22)$);
+\end{tikzpicture}
+
+\newpage
+\section*{Pro dané funkce určete $D(f)$, inverzní funkci, ověřte, že je prostá na $D(f)$}
+
+\textbf{\textcircled{1}}\quad $y=3^{1-x}$
+
+$D(f)=\mathbb{R}$, prostá na $D(f)$
+
+vyjádření $x$:
+\begin{align*}
+y &= 3^{1-x}\\
+\log_3y &= 1-x\\
+x &= 1-\log_3y
+\end{align*}
+\[ \vysl{f^{-1}\colon\ y=1-\log_3x,\quad x\in(0,\infty)} \]
+
+\hrule
+\medskip
+\textbf{\textcircled{2}}\quad $y=\sin\tm{h5}{(2x-\pi)}$
+
+$D(f)=\mathbb{R}$, není prostá na $D(f)$
+
+($\sin x$ je prostá na $\left\langle-\frac\pi2,\frac\pi2\right\rangle$) $\Rightarrow$
+\begin{align*}
+-\frac\pi2 \le \tm{t5}{2x-\pi} &\le \frac\pi2 \qquad \big/+\pi\\
+-\frac\pi2+\pi \le 2x &\le \frac\pi2+\pi\\
+\frac\pi2 \le 2x &\le \frac32\pi \qquad \big/:2\\
+\tm{b1}{\frac\pi4 \le x} &\le \tm{b2}{\frac34\pi}
+\end{align*}
+\begin{tikzpicture}[remember picture, overlay, red!75!black]
+\draw[semithick] (h5) ellipse [x radius=0.72cm, y radius=0.3cm];
+\draw[-{Stealth}, semithick] ($(h5.east)+(0.12,0)$) .. controls +(3.5,0.1) and +(0.3,1.2) .. ([yshift=3pt]t5.north);
+\draw[semithick, decorate, decoration={brace, mirror, amplitude=5pt}] ([yshift=-3pt]b1.south west) -- ([yshift=-3pt]b2.south east)
+  node[midway, below=7pt, align=center, font=\small] {na tomto intervalu\\ hledáme inverzní};
+\end{tikzpicture}
+\vspace{1.1cm}
+
+vyjádření $x$:
+\begin{align*}
+y &= \sin(2x-\pi)\\
+\arcsin y &= 2x-\pi\\
+x &= \frac{\arcsin y+\pi}{2}
+\end{align*}
+\[ \vysl{f^{-1}\colon\ y=\frac{\arcsin x+\pi}{2},\quad x\in\langle-1,1\rangle} \]
+
+\end{document}

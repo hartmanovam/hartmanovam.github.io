@@ -1,0 +1,171 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,fit,shapes.geometric,decorations.pathmorphing,decorations.pathreplacing,babel}
+\setlength{\mathindent}{1.5em}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\tg}{tg}
+% značky pro šipky a kroužky (více průchodů pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\newcommand{\tmt}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\textstyle #2$};}
+\newcommand{\mk}[1]{\tikz[remember picture, overlay]\coordinate (#1) at (0,0.25em);}
+% zakroužkovaný výraz se jménem: červeně (\krn) a modrou propiskou = černě (\krb)
+\newcommand{\krn}[2]{\tikz[remember picture, baseline=(#1.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt] (#1) {$\displaystyle #2$};}
+\newcommand{\krb}[2]{\tikz[remember picture, baseline=(#1.base)]\node[draw, thin, ellipse, inner sep=0.5pt] (#1) {$\displaystyle #2$};}
+\newcommand{\kb}[1]{\tikz[baseline=(k.base)]\node[draw, thin, circle, inner sep=0.5pt] (k) {$#1$};}
+\newcommand{\cerv}[1]{{\color{red!75!black}#1}}
+% červená svorka pod výrazem
+\newcommand{\cbrace}[2]{{\color{red!75!black}\underbrace{\color{black}#1}_{#2}}}
+% vlnovkou podtržený text
+\newcommand{\vln}[2]{\tikz[baseline=(o.base)]{\node[inner sep=0pt, outer sep=0pt] (o) {#2};
+  \draw[#1, thin, vlnka] ([yshift=-3pt]o.south west) -- ([yshift=-3pt]o.south east);}}
+\tikzset{vlnka/.style={decorate, decoration={snake, amplitude=1pt, segment length=4pt}}}
+\tikzset{pz/.style={red!75!black, font=\small, inner sep=1pt},
+  sipr/.style={-{Stealth}, semithick, red!75!black},
+  smycka/.style={draw=red!75!black, ellipse, inner sep=-2pt}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\newcommand{\pp}[4]{\left|\begin{array}{ll} #1 & #2\\ #3 & #4\end{array}\right|}
+
+\begin{document}
+\shorthandoff{-}
+
+\begin{center}
+\Large \vln{}{Určitý} \vln{}{integrál} $=$ \fbox{Horní mez $-$ Spodní mez}
+\end{center}
+
+\[
+\int_{-2}^{1}\frac{\mathrm{d}t}{t^2+1} = \Big[\arctg t\Big]_{-2}^{1}
+= \tm{a1}{\arctg1}-\arctg(-2) = \vysl{\frac{\pi}{4}-\arctg(-2)}
+\begin{tikzpicture}[remember picture, overlay]
+\begin{scope}[shift={($(a1.south)+(0.1,-1.3)$)}, thin]
+\draw (0,0) circle (0.55);
+\draw (-0.75,0) -- (0.95,0);
+\draw (0,-0.8) -- (0,0.8);
+\draw (0.55,-0.8) -- (0.55,0.85) node[anchor=west, inner sep=2pt, font=\small] {$\tg$};
+\draw[dashed] (0,0) -- (0.55,0.55);
+\draw (0.49,0.55) -- (0.61,0.55) node[right, inner sep=2pt, font=\small] {$1$};
+\end{scope}
+\end{tikzpicture}
+\]
+\vspace{1.7cm}
+
+\begin{align*}
+\int_{-1}^{1}\left(2x^3+3x^2+5\right)\dx &= \left[\cancel{2}\cdot\frac{x^4}{\underset{2}{\cancel{4}}}+\cancel{3}\,\frac{x^3}{\cancel{3}}+5x\right]_{-1}^{1}
+= \frac{1^4}{2}+1^3+5\cdot1-\left(\frac{(-1)^4}{2}+(-1)^3+5\cdot(-1)\right) =\\
+&= \frac12+1+5-\left(\frac12-1-5\right) = \frac12+6-\left(\frac12-6\right) = \cancel{\frac12}+6-\cancel{\frac12}+6 = \vysl{12}
+\end{align*}
+
+\bigskip
+\begin{align*}
+\int_0^1\frac{x-1}{x+2}\dx &= \int_0^1\frac{x+2\cerv{{}-2-1}}{x+2}\dx
+= \int_0^1\frac{\tmt{s1}{x+2}\tmt{s2}{{}-3}}{\tmt{sd}{x+2}}\dx
+= \int_0^1\krb{c3}{\frac{x+2}{x+2}}-3\,\frac{1}{x+2}\dx =\\
+&= \Big[x-3\cdot\ln|x+2|\Big]_0^1 = 1-3\cdot\ln|1+2|-\left(0-3\ln|0+2|\right) =\\
+&= 1-3\ln3+3\ln2 = 1-\ln3^3+\ln2^3 = 1+\ln8-\ln27 =\\
+&= \vysl{1+\ln\frac{8}{27}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[smycka, rotate fit=-25, fit=(s1)(sd)] {};
+\node[smycka, rotate fit=25, fit=(s2)(sd)] {};
+\node[anchor=south, inner sep=1pt] at ([yshift=1pt]c3.north) {$\overset{\displaystyle 1}{\|}$};
+\end{tikzpicture}
+\end{align*}
+
+\bigskip
+\begin{align*}
+\int_{-\frac{\pi}{2}}^{\pi}(x-1)\sin x\dx &=
+\pp{u=x-1}{u'=1}{v'=\sin x}{v=-\cos x}
+= \Big[(x-1)\cdot(-\cos x)\Big]_{-\frac{\pi}{2}}^{\pi}-\int_{-\frac{\pi}{2}}^{\pi}(-\cos x)\dx =\\[0.5em]
+&= \left[(\pi-1)\cdot(-\cos\pi)-\left[\left(-\frac{\pi}{2}-1\right)\cdot\Big(\cbrace{-\cos\left(-\tfrac{\pi}{2}\right)}{\cerv{=0}}\Big)\right]\right]
++\Big[\sin x\Big]_{-\frac{\pi}{2}}^{\pi} =\\[0.6em]
+&\mk{l4}= (\pi-1)\cdot\Big(\cbrace{-(-1)}{\cerv{+}}\Big)+\Big[\tm{sp}{\sin\pi}-\sin\left(-\tfrac{\pi}{2}\right)\Big] =\\[2.4em]
+&= \pi-1+\big(-(-1)\big) = \pi-1+1 = \vysl{\pi}
+\begin{tikzpicture}[remember picture, overlay]
+% jednotková kružnice vlevo (cos)
+\begin{scope}[shift={($(l4)+(-3.2,0)$)}, thin]
+\draw (0,0) circle (0.6);
+\draw (-0.85,0) -- (0.85,0) node[right, font=\small] {$\cos$};
+\draw (0,-0.9) -- (0,0.9);
+\draw[sipr] (0.62,-0.1) arc (-10:-80:0.62);
+\fill[red!75!black] (0,-0.6) circle (1.5pt);
+\node[pz, anchor=north east] at (-0.05,-0.68) {$-\frac{\pi}{2}$};
+\end{scope}
+% sin pi = 0 a malá kružnice
+\draw[red!75!black, thin, vlnka] ([yshift=-2pt]sp.south west) -- ([yshift=-2pt]sp.south east);
+\node[pz, anchor=east] at ([yshift=-7pt]sp.south west) {$=0$};
+\begin{scope}[shift={($(sp.south)+(0.2,-0.62)$)}, thin]
+\draw (0,0) circle (0.25);
+\draw (-0.35,0) -- (0.35,0);
+\draw (0,-0.35) -- (0,0.38) node[anchor=south west, inner sep=0pt, font=\tiny] {$\sin$};
+\draw[sipr] (0.27,-0.04) arc (-10:-80:0.27);
+\fill[red!75!black] (0,-0.25) circle (1.3pt);
+\node[pz, anchor=north east, font=\tiny] at (-0.02,-0.27) {$-\frac{\pi}{2}$};
+\end{scope}
+\end{tikzpicture}
+\end{align*}
+
+\newpage
+\begin{align*}
+&\int_{-1}^{1}(5x+2)\,e^{-2x}\dx =
+\pp{u=5x+2}{u'=5}{v'=e^{-2x}}{\krb{cv}{v\overset{*}{=}-\tfrac12e^{-2x}}} =\\[0.4em]
+&\qquad= \left[(5x+2)\cdot\left(-\tfrac12e^{-2x}\right)\right]_{-1}^{1}-\int_{-1}^{1}5\left(-\tfrac12e^{-2x}\right)\dx =\\[0.6em]
+&\qquad= (5\cdot1+2)\cdot\left(-\tfrac12e^{-2}\right)-\Big(\big(5\cdot(-1)+2\big)\cdot\left(-\tfrac12e^{2}\right)\Big)+\frac52\krb{ci}{\int_{-1}^{1}e^{-2x}}\dx =\\
+&\qquad= -\frac72e^{-2}-\left(+\frac32e^{2}\right)+\frac52\left[-\frac12e^{-2x}\right]_{-1}^{1} =\\
+&\qquad= -\frac72e^{-2}-\frac32e^{2}+\frac52\left(-\frac12e^{-2}-\left(-\frac12e^{+2}\right)\right)
+= \krb{q1}{-\frac72e^{-2}}-\frac32e^{2}\krb{q2}{-\frac54e^{-2}}+\frac54e^{2} =\\
+&\qquad= \vysl{-\frac{19}{4}e^{-2}-\frac14e^{2}}
+\end{align*}
+
+\vspace{0.3cm}
+\hspace*{1.5em}\tikz[remember picture, baseline=(box.base)]\node[draw=red!75!black, thick, rounded corners=2pt, inner sep=5pt] (box) {%
+\begin{tabular}{@{}l@{}}
+\vln{red!75!black}{Pomocný výpočet:}\\[2pt]
+$\displaystyle \tm{hv}{{}^{*}}\int e^{-2x}\dx = \subst{t=-2x\\ \mathrm{d}t=-2\dx\\ \frac{\mathrm{d}t}{-2}=\mathrm{d}x}
+= \int e^t\,\frac{\mathrm{d}t}{-2} = -\frac12e^t = \boxed{-\frac12e^{-2x}}$
+\end{tabular}};
+\begin{tikzpicture}[remember picture, overlay]
+\draw[thin] (cv.south west) .. controls ($(cv.south west)+(-4,-0.3)$) and ($(box.north west)+(-0.5,4.5)$) .. ([xshift=-2pt]box.north west);
+\draw[thin] (ci.south) .. controls ($(ci.south)+(-4,-1.4)$) and ($(box.north west)+(-0.1,2.2)$) .. ([xshift=-2pt]box.north west);
+\end{tikzpicture}
+
+\bigskip\medskip
+\begin{align*}
+\int_0^2\frac{x}{\sqrt{8-x^2}}\dx &= \tm{sb6}{\subst{8-x^2=t\\ -2x\dx=\mathrm{d}t\\ \mathrm{d}x=\frac{\mathrm{d}t}{-2x}}}
+= \krn{c6}{\int_8^{+4}}\frac{\cancel{x}}{\sqrt{t}}\,\frac{\mathrm{d}t}{-2\cancel{x}} =\\[4.2em]
+&= \cerv{+}\frac12\int_{\cerv{4}}^{\cerv{8}} t^{-\frac12}\dt = \frac12\left[\frac{t^{\frac12}}{\frac12}\right]_4^8 = \frac12\Big[2\sqrt{t}\Big]_4^8
+= \frac12\left[2\sqrt8-2\sqrt4\right] =\\
+&= \frac12\left(2\sqrt8-4\right) = \sqrt8-2 = \vysl{2\sqrt2-2}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north west, inner sep=0pt] (m6) at ($(sb6.south west)+(0.25,-0.2)$)
+  {$\begin{array}{l} x=2\ \longrightarrow\ t=8-2^2=\kb{+4}\\[3pt] x=0\ \longrightarrow\ t=8-0^2=\kb{8}\end{array}$};
+\node[red!75!black, anchor=north west, align=center] (t6) at ($(c6.south east)+(1.3,-0.3)$) {\shortstack{MUSÍ se OTOČIT\\ MEZE!}};
+\draw[sipr] (t6.north west) -- ([xshift=-2pt]c6.south east);
+\end{tikzpicture}
+\end{align*}
+
+\bigskip
+\begin{align*}
+\int_0^2\ln(1+x)\dx &= \tm{sb7}{\subst{1+x=t\\ \mathrm{d}x=\mathrm{d}t}}
+= \int_1^3 \cerv{1}\cdot\ln t\dt = \pp{u=\ln t}{u'=\frac1t}{v'=1}{v=t} =\\[3.4em]
+&= \Big[t\cdot\ln t\Big]_1^3-\int_1^3 \cancel{t}\cdot\frac{1}{\cancel{t}}\dt = \big[3\ln3-1\ln1\big]-\Big[t\Big]_1^3 =\\
+&= 3\cdot\ln3-0-(3-1) = \vysl{3\cdot\ln3-2}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north west, inner sep=0pt] at ($(sb7.south west)+(0.1,-0.1)$)
+  {$\begin{array}{l} x=0\ \to\ t=1+0=\kb{1}\\[3pt] x=2\ \to\ t=1+2=\kb{3}\end{array}$};
+\end{tikzpicture}
+\end{align*}
+
+\end{document}

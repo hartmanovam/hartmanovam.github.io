@@ -1,0 +1,80 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+
+\begin{document}
+
+\section*{Z grafu funkce urči limity:}
+
+\textbf{a)}\quad
+$\displaystyle\lim_{x\to\infty} e^x = \pozn{\infty}$
+\qquad
+$\displaystyle\lim_{x\to-\infty} e^x = \pozn{0}$
+\qquad
+$\displaystyle\lim_{x\to 0} e^x = \pozn{1}$
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=7cm, height=5cm,
+  xmin=-3, xmax=2.2, ymin=-0.8, ymax=5,
+  xtick=\empty, ytick={1}, yticklabel style={font=\small}]
+\addplot[thick, domain=-3:1.6, samples=60] {exp(x)} node[right] {$e^x$};
+\addplot[only marks, mark=*] coordinates {(0,1)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\textbf{b)}\quad
+$\displaystyle\lim_{x\to\infty} \operatorname{arccotg} x = \pozn{0}$
+\qquad
+$\displaystyle\lim_{x\to-\infty} \operatorname{arccotg} x = \pozn{\pi}$
+\qquad
+$\displaystyle\lim_{x\to 0} \operatorname{arccotg} x = \pozn{\tfrac{\pi}{2}}$
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=9cm, height=5cm,
+  xmin=-6, xmax=6, ymin=-0.6, ymax=3.8,
+  clip=false, xtick=\empty, ytick={1.5708,3.1416}, yticklabels={$\frac{\pi}{2}$,$\pi$}]
+\addplot[dashed, domain=-6:6] {pi};
+\addplot[thick, domain=-6:6, samples=100] {pi/2 - rad(atan(x))} node[right] {$\operatorname{arccotg}$};
+\addplot[only marks, mark=*] coordinates {(0,1.5708)};
+\addplot[only marks, mark=o] coordinates {(0,3.1416)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section*{Vypočti:}
+
+\textbf{a)}
+\[
+\lim_{x\to\infty} e^{\frac{2x}{x^2-1}}
+= e^{\lim\limits_{x\to\infty}\frac{2x}{x^2-1}}
+= e^{\lim\limits_{x\to\infty}\frac{2x}{x^2}}
+= e^{\lim\limits_{x\to\infty}\frac{2}{x}}
+= e^{\frac{2}{\infty}} = e^0 = \vysl{1}
+\]
+(V čitateli i jmenovateli exponentu rozhoduje člen s nejvyšší mocninou: $2x$ a $x^2$.)
+
+\textbf{b)}
+\[
+\lim_{x\to\infty} \frac{3x^4-2}{2x^4+x+3}
+= \lim_{x\to\infty} \frac{3x^4}{2x^4}
+= \vysl{\frac{3}{2}}
+\]
+(V čitateli i jmenovateli rozhoduje člen s nejvyšší mocninou: $3x^4$ a $2x^4$.)
+
+\end{document}

@@ -1,0 +1,121 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,fit,shapes.geometric,babel}
+\setlength{\mathindent}{1.5em}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+% značka pro šipky a kroužky (více průchodů pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+
+\begin{document}
+
+\section*{Integruj = Najdi primitivní funkci:}
+
+\textbf{1.}
+\[
+\int 4\sqrt{x^5}\dx = 4\int\sqrt{x^5}\dx = 4\int x^{\frac52}\dx
+= 4\,\frac{x^{\frac72}}{\frac72} = \frac{4\cdot2\sqrt{x^7}}{7}
+= \vysl{\frac{8x^3\sqrt{x}}{7}+c}
+\]
+
+\textbf{2.}
+\[
+\int 3\,\frac{\mathrm{d}x}{\sin^2x} = 3\int\frac{1}{\sin^2x}\dx
+= 3\cdot(-\operatorname{cotg}x)+c = \vysl{-3\operatorname{cotg}x+c}
+\]
+
+\textbf{3.}
+\begin{align*}
+\int (x+1)\cdot(x^2+2x)\dx &= \int\left(x^3+2x^2+x^2+2x\right)\dx = \int\left(x^3+3x^2+2x\right)\dx =\\
+&= \frac{x^4}{4}+\cancel{3}\,\frac{x^3}{\cancel{3}}+\frac{\cancel{2}x^2}{\cancel{2}}+c = \vysl{\frac{x^4}{4}+x^3+x^2+c}
+\end{align*}
+
+\textbf{4.}
+\begin{align*}
+\int \frac{\tm{n1}{x\sqrt[3]{x}}-\tm{n2}{2\sqrt[5]{x^2}}}{\tm{dd}{x\sqrt{x}}}\dx
+&= \int\left(x\cdot x^{\frac13}\cdot x^{-1}\cdot x^{-\frac12} - 2x^{\frac25}\cdot x^{-1}\cdot x^{-\frac12}\right)\dx =\\
+&= \int\left(x^{1+\frac13-1-\frac12} - 2x^{\frac25-1-\frac12}\right)\dx
+= \int\left(x^{\frac{6+2-6-3}{6}} - 2x^{\frac{4-10-5}{10}}\right)\dx =\\
+&= \int\left(\tm{e1}{x^{-\frac16}} - 2\tm{e2}{x^{-\frac{11}{10}}}\right)\dx
+= \frac{x^{\frac56}}{\frac56} - 2\,\frac{x^{-\frac1{10}}}{-\frac1{10}} + c
+= \vysl{\frac{6\sqrt[6]{x^5}}{5} + \frac{20}{\sqrt[10]{x}} + c}
+\end{align*}
+\begin{tikzpicture}[remember picture, overlay]
+\node[draw=red!75!black, ellipse, inner sep=-2pt, rotate fit=-25, fit=(n1)(dd)] {};
+\node[draw=red!75!black, ellipse, inner sep=-2pt, rotate fit=25, fit=(n2)(dd)] {};
+\node[anchor=north east, font=\small] (p1) at ($(e1.south)+(0.35,-0.75)$) {$-\frac16+\frac66=\frac56$};
+\node[anchor=north west, font=\small] (p2) at ($(e2.south)+(-0.35,-0.75)$) {$-\frac{11}{10}+\frac{10}{10}=-\frac1{10}$};
+\draw[-{Stealth}] ([yshift=-1pt]e1.south) -- (e1.south |- p1.north);
+\draw[-{Stealth}] ([yshift=-1pt]e2.south) -- (e2.south |- p2.north);
+\end{tikzpicture}
+\vspace{1.0cm}
+
+\textbf{5.}
+\[
+\int\left(4\cdot5^x-2\cos x+e\right)\dx = 4\int5^x\dx-2\int\cos x\dx+e\int\mathrm{d}x
+= \vysl{4\,\frac{5^x}{\ln5}-2\sin x+ex+c}
+\]
+
+\textbf{6.}
+\begin{align*}
+\int x^3\cdot\ln x\dx &=
+\left|\begin{array}{ll} u=\ln x & \to\ u'=\frac1x\\[3pt] v'=x^3 & \to\ v=\frac{x^4}{4}\end{array}\right|
+= \frac{x^4}{4}\ln x-\int\frac{1}{\cancel{x}}\cdot\frac{x^{\cancel{4}\,3}}{4}\dx =\\
+&= \frac{x^4\ln x}{4}-\frac14\int x^3\dx = \frac{x^4\ln x}{4}-\frac14\cdot\frac{x^4}{4}+c =\\
+&= \frac{x^4\ln x}{4}-\frac{x^4}{16}+c = \vysl{\frac{x^4}{4}\left(\ln x-\frac14\right)+c}
+\end{align*}
+
+\textbf{7.}
+\begin{align*}
+\int x^2\cdot\sin x\dx &=
+\left|\begin{array}{ll} u=x^2 & \to\ u'=2x\\ v'=\sin x & \to\ v=-\cos x\end{array}\right|
+= x^2(-\cos x)-\int2x\cdot(-\cos x)\dx =\\
+&= -x^2\cos x+2\int x\cdot\cos x\dx =
+\left|\begin{array}{ll} u=x & \to\ u'=1\\ v'=\cos x & \to\ v=\sin x\end{array}\right| =\\
+&= -x^2\cos x+2\left[x\sin x-\int\sin x\dx\right] =\\
+&= -x^2\cos x+2x\sin x-2(-\cos x)+c = \vysl{-x^2\cos x+2x\sin x+2\cos x+c}
+\end{align*}
+
+\textbf{8.}
+\[
+\int(6x-3)^7\dx =
+\left|\begin{array}{l} 6x-3=t\\ 6\dx=\mathrm{d}t\\ \mathrm{d}x=\frac{\mathrm{d}t}{6}\end{array}\right|
+= \int t^7\,\frac{\mathrm{d}t}{6} = \frac16\int t^7\dt = \frac16\cdot\frac{t^8}{8}+c
+= \frac{t^8}{48}+c = \vysl{\frac{(6x-3)^8}{48}+c}
+\]
+
+\textbf{9.}
+\begin{align*}
+\int x\sqrt{2-x^2}\dx &=
+\subst{2-x^2=t\\ -2x\dx=\mathrm{d}t\\ \mathrm{d}x=\frac{\mathrm{d}t}{-2x}}
+= \int \cancel{x}\sqrt{t}\,\frac{\mathrm{d}t}{-2\cancel{x}}
+= -\frac12\int t^{\frac12}\dt =\\
+&= -\frac12\,\frac{t^{\frac32}}{\frac32}+c
+= -\frac{\cancel{2}\sqrt{(2-x^2)^3}}{\cancel{2}\cdot3}+c
+= \vysl{-\frac{(2-x^2)\sqrt{2-x^2}}{3}+c}
+\end{align*}
+
+\textbf{10.}
+\[
+\int\frac{\ln x}{x}\dx =
+\subst{\ln x=t\\ \frac1x\dx=\mathrm{d}t\\ \mathrm{d}x=x\dt}
+= \int\frac{t}{\cancel{x}}\,\cancel{x}\dt = \frac{t^2}{2}+c
+= \vysl{\frac{(\ln x)^2}{2}+c}
+\]
+
+\end{document}

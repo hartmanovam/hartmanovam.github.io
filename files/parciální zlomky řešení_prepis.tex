@@ -1,0 +1,248 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,matrix,decorations.pathreplacing,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+% Hornerovo schéma (viz cv3)
+\tikzset{hm/.style={matrix of math nodes, nodes in empty cells, column sep=0pt, row sep=0pt,
+  nodes={minimum width=2.7em, minimum height=1.55em, anchor=center, inner sep=1pt}}}
+\newcommand{\hornerlines}[4]{%
+  \pgfmathtruncatemacro{\hlR}{#2-1}\pgfmathtruncatemacro{\hlN}{#3-1}%
+  \foreach \i in {1,...,\hlR} \draw (#1-\i-1.south west) -- (#1-\i-#3.south east);
+  \foreach \j in {1,...,\hlN} \draw (#1-1-\j.north east) -- (#1-#2-\j.south east);
+  \draw[decorate, decoration={brace, mirror, amplitude=4pt}]
+    ([yshift=-2pt]#1-#2-2.south west) -- ([yshift=-2pt]#1-#2-#4.south east);}
+% značka pro šipky (2 průchody pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+% červeně zakroužkované číslo / hvězdička
+\newcommand{\kr}[1]{\tikz[baseline=(k.base)]\node[draw=red!75!black, circle, inner sep=0.6pt] (k) {$#1$};}
+\newcommand{\hv}{\tikz[baseline=(k.base)]\node[draw=red!75!black, text=red!75!black, circle, inner sep=0.8pt] (k) {$\ast$};}
+% svorka přes dva řádky soustavy: \spoj{text uprostřed}{výsledek}
+\newcommand{\spoj}[2]{\raisebox{-7.2pt}[0pt][0pt]{$\left.\vphantom{\rule[-9.3pt]{0pt}{24pt}}\right\}#1\left\{\vphantom{\rule[-9.3pt]{0pt}{24pt}}\right.#2$}}
+\tikzset{sipka/.style={-{Stealth}, semithick, red!75!black}}
+
+\begin{document}
+\shorthandoff{-}
+\section*{Parciální zlomky -- řešení}
+
+\textbf{\textcircled{1}}\quad
+$\boxed{\dfrac{x^2+x}{x^2+4x-12}} = 1+\dfrac{-3x+12}{x^2+4x-12}$
+
+\begin{itemize}
+\item \underline{dělení:}
+\[
+\begin{array}{@{}r@{}r@{}r@{}r@{}l@{}}
+\bigl( & x^2 & {}+x\rlap{$\bigr)$} & & \quad{}:\left(x^2+4x-12\right)=1\\
+-\bigl( & x^2 & {}+4x & {}-12\rlap{$\bigr)$} &\\ \cline{2-4}
+ & 0 & {}-3x & {}+12 &
+\end{array}
+\]
+\item \underline{rozklad jmenovatele:}
+\[
+x^2+4x-12 = (x+6)(x-2) \qquad \text{\dots\ diskriminant \dots\ nebo odhadem}
+\]
+\item \underline{obecný tvar rozkladu + výpočet konstant}
+\begin{align*}
+\frac{-3x+12}{(x+6)(x-2)} &= \frac{A}{x+6}+\frac{B}{x-2}\\
+-3x+12 &= A(x-2)+B(x+6)\\
+x=2 \ \Rightarrow\ -3\cdot2+12 &= A\cdot0+B(2+6)\\
+6 &= 8B \ \Rightarrow\ B=\frac68=\frac34\\
+x=-6 \ \Rightarrow\ -3\cdot(-6)+12 &= A(-6-2)+B\cdot0\\
+30 &= -8A \ \Rightarrow\ A=-\frac{30}{8}=-\frac{15}{4}
+\end{align*}
+\item \pozn{\underline{výsledek}}
+\[
+\frac{x^2+x}{x^2+4x-12} = 1+\frac{-\frac{15}{4}}{x+6}+\frac{\frac34}{x-2} = \vysl{1-\frac{15}{4(x+6)}+\frac{3}{4(x-2)}}
+\]
+\end{itemize}
+
+\newpage
+\textbf{\textcircled{2}}\quad
+$\boxed{\dfrac{18-5x-7x^2}{5x^3-26x^2+44x-24}}$
+\hfill
+\fcolorbox{red!75!black}{white}{\hv\ \pozn{výsledek:} $\displaystyle\frac{-2}{x-2}-\frac{5}{(x-2)^2}+\frac{3}{5x-6}$}
+
+\begin{itemize}
+\item \underline{dělit nemusíme}
+\item \underline{rozklad jmenovatele}
+\[
+\kr{5}x^3-26x^2+44x-24 = \kr{5}(x-2)(x-2)\left(x-\tfrac65\right) = \underline{\underline{(x-2)^2\cdot(\kr{5}x-6)}}
+\]
+\begin{center}
+\begin{tikzpicture}
+\matrix (m) [hm] {
+  & 5 & -26 & 44 & -24\\
+2 & 5 & -16 & 12 & 0\\[0.3cm]
+  & 5x^2 & -16x & +12 & \\};
+\hornerlines{m}{2}{5}{4}
+\node[anchor=base west] (D) at (m-3-4.base east) {$\ \Rightarrow\ D=16^2-4\cdot5\cdot12=16$};
+\node[anchor=north west] at ($(D.south west)+(0.9,-0.05)$) {$x_{1,2}=\dfrac{16\pm4}{2\cdot5}=\begin{cases}\frac{20}{10}=2\\[2pt] \frac{12}{10}=\frac65\end{cases}$};
+\end{tikzpicture}
+\end{center}
+\item \underline{obecný tvar rozkladu}
+\[
+\frac{18-5x-7x^2}{5x^3-26x^2+44x-24} = \frac{18-5x-7x^2}{(x-2)^2\cdot(5x-6)} = \frac{A}{x-2}+\frac{B}{(x-2)^2}+\frac{C}{5x-6}
+\]
+\item \underline{výpočet konstant}
+\[
+\frac{18-5x-7x^2}{(x-2)^2(5x-6)} = \frac{A\overbrace{(x-2)(5x-6)}^{5x^2-10x-6x+12}+B(5x-6)+C\overbrace{(x-2)^2}^{x^2-4x+4}}{(x-2)^2\cdot(5x-6)}
+\]
+\[
+18-5x-7x^2 = 5Ax^2-16Ax+12A+5Bx-6B+Cx^2-4Cx+4C
+\]
+\[
+\begin{array}{lrcl}
+x^2: & -7 &=& 5A+C \ \Rightarrow\ \tm{Cv}{C=-7-5A}\\
+x^1: & -5 &=& -16A+5B-4C\ \spoj{\begin{smallmatrix}1.\\+\\2.\end{smallmatrix}}{\,13=-4A-B \ \Rightarrow\ \tm{Bv}{B=-4A-13}}\\
+x^0: & 18 &=& 12A-6B+4C
+\end{array}
+\]
+do 2. rovnice:
+\begin{align*}
+-5 &= -16A+5\tm{sB}{(-4A-13)}-4\tm{sC}{(-7-5A)} \quad \hv\\
+-5 &= -16A-20A-65+28+20A\\
+32 &= -16A \ \Rightarrow\ \boxed{A=-2}
+\end{align*}
+\[
+\boxed{B}=-4\cdot(-2)-13=\boxed{-5}, \qquad \boxed{C}=-7-5\cdot(-2)=\boxed{3}
+\]
+\begin{tikzpicture}[remember picture, overlay]
+\draw[sipka] (Bv.south) .. controls +(0,-1.1) and +(0.3,0.9) .. ([yshift=2pt]sB.north);
+\draw[sipka] ([xshift=1pt]Cv.east) -- ($(Cv.east)+(6.5,0)$) to[out=0, in=90] ($(Cv.east)+(7.1,-0.9)$) to[out=-90, in=40, looseness=0.8] ([yshift=2pt]sC.north east);
+\end{tikzpicture}
+\end{itemize}
+
+\newpage
+\textbf{\textcircled{3}}\quad $\boxed{\dfrac{2x+2}{(x-1)\left(x^2+1\right)^2}}$
+
+\begin{itemize}
+\item \underline{dělení i rozklad jmenovatele už máme}
+\item \underline{obecný tvar rozkladu:}
+\[
+\frac{2x+2}{(x-1)\left(x^2+1\right)^2} = \frac{A}{x-1}+\frac{Bx+C}{x^2+1}+\frac{Dx+E}{\left(x^2+1\right)^2}
+\]
+\[
+\frac{2x+2}{(x-1)\left(x^2+1\right)^2} = \textstyle\frac{A\left(x^2+1\right)^2+(Bx+C)(x-1)\left(x^2+1\right)+(Dx+E)(x-1)}{(x-1)\left(x^2+1\right)^2}
+\]
+\begin{align*}
+2x+2 &= A\left(x^4+2x^2+1\right)+(Bx+C)\left(x^3-x^2+x-1\right)+Dx^2-Dx+Ex-E\\
+2x+2 &= Ax^4+2Ax^2+A+Bx^4-Bx^3+Bx^2-Bx+Cx^3-Cx^2+Cx-C+{}\\ &\quad+Dx^2-Dx+Ex-E
+\end{align*}
+\[
+\begin{array}{lrcll}
+x^4: & 0 &=& A+B & \Rightarrow\ A=-B \ \Rightarrow\ B=-1\\
+x^3: & 0 &=& -B+C & \Rightarrow\ C=B=-A\ (*) \ \Rightarrow\ C=-1\\
+x^2: & 0 &=& 2A+B-C+D & \spoj{+}{\,2=2A+E \ \Rightarrow\ E=2-2A\ (**)}\\
+x^1: & 2 &=& -B+C-D+E & \\
+x^0: & 2 &=& A-C-E &
+\end{array}
+\]
+$(*)$ a $(**)$ do poslední rovnice:
+\begin{align*}
+2 &= A-(-A)-(2-2A)\\
+2 &= A+A-2+2A\\
+4 &= 4A \ \Rightarrow\ \underline{A=1}\quad(\Rightarrow B=-1,\ C=-1)\\
+E &= 2-2A = 2-2 = \underline{0}
+\end{align*}
+dosazení do 4. rovnice (u $x^1$):
+\begin{align*}
+2 &= -(-1)+(-1)-D+0\\
+2 &= 1-1-D \ \Rightarrow\ \underline{D=-2}
+\end{align*}
+\item \pozn{\underline{výsledek}}
+\[
+\vysl{\frac{2x+2}{(x-1)\left(x^2+1\right)^2} = \frac{1}{x-1}+\frac{-x-1}{x^2+1}+\frac{-2x}{\left(x^2+1\right)^2}}
+\]
+\end{itemize}
+
+\newpage
+\textbf{\textcircled{4}}\quad
+$\boxed{\dfrac{x^4+6x^2+x-2}{x^4+2x^3}}\ (*) = 1+\tm{rem}{\frac{-2x^3+6x^2+x-2}{x^4+2x^3}}$
+
+\begin{itemize}
+\item \underline{dělení:}
+\[
+\begin{array}{@{}r@{}r@{}r@{}r@{}r@{}r@{}l@{}}
+\bigl( & x^4 & & {}+6x^2 & {}+x & {}-2\rlap{$\bigr)$} & \quad{}:\left(x^4+2x^3\right)=1\\
+-\bigl( & x^4 & {}+2x^3\rlap{$\bigr)$} & & & &\\ \cline{2-6}
+ & & -2x^3 & {}+6x^2 & {}+x & {}-2 &
+\end{array}
+\]
+\item \underline{rozklad jmenovatele:}
+\[ x^4+2x^3 = x^3(x+2) \]
+\item \underline{obecný tvar rozkladu}
+\[
+\tm{og}{\frac{-2x^3+6x^2+x-2}{x^3(x+2)}} = \frac{A}{x^3}+\frac{B}{x^2}+\frac{C}{x}+\frac{D}{x+2}
+\]
+\begin{tikzpicture}[remember picture, overlay]
+\draw[sipka] ([xshift=2pt]rem.east) .. controls +(7,-0.3) and +(5,0.4) .. ([yshift=2pt]og.north east);
+\end{tikzpicture}
+\[
+\frac{-2x^3+6x^2+x-2}{x^3(x+2)} = \frac{A(x+2)+Bx(x+2)+Cx^2(x+2)+Dx^3}{x^3(x+2)}
+\]
+\[
+-2x^3+6x^2+x-2 = Ax+2A+Bx^2+2Bx+Cx^3+2Cx^2+Dx^3
+\]
+\[
+\begin{array}{lrcll}
+x^3: & -2 &=& C+D & \Rightarrow\ -2=\frac52+D \ \Rightarrow\ \underline{D}=-2-\frac52=\underline{-\frac92}\\[3pt]
+x^2: & 6 &=& B+2C & \Rightarrow\ 2C=6-B \ \Rightarrow\ 2C=6-1 \ \Rightarrow\ \underline{C=\frac52}\\[3pt]
+x^1: & 1 &=& A+2B & \Rightarrow\ \boxed{2B}=1-A=1-(-1)=\tm{b2}{\boxed{2}}\\[3pt]
+x^0: & -2 &=& 2A & \Rightarrow\ \underline{A=-1}
+\end{array}
+\]
+\begin{tikzpicture}[remember picture, overlay]
+\node[below=1pt] (bd) at (b2.south) {$\Downarrow$};
+\node[below=0pt] at (bd.south) {$\underline{B=1}$};
+\end{tikzpicture}
+\vspace{0.6cm}
+\item \pozn{\underline{výsledek}}
+\[
+\vysl{(*)\quad f(x) = 1-\frac{1}{x^3}+\frac{1}{x^2}+\frac{5}{2x}-\frac{9}{2(x+2)}}
+\]
+\end{itemize}
+
+\end{document}

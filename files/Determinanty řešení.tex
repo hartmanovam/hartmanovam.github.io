@@ -1,0 +1,99 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+
+\newcommand{\krok}[1]{{\small\color{blue!60!black}#1}}
+\newcommand{\kroku}[1]{\text{\small\color{blue!60!black}#1}}
+
+\begin{document}
+
+\section*{Determinanty -- řešení}
+
+\textbf{a)}
+\[
+\begin{vmatrix} -3 & 9 & 3 & 6\\ -5 & 8 & 2 & 7\\ 4 & -5 & -3 & -2\\ 7 & -8 & -4 & -5 \end{vmatrix}
+= \underbrace{3}_{\substack{\kroku{vytknutí 3 z}\\ \kroku{prvního řádku}}}\cdot
+\begin{vmatrix} -1 & 3 & 1 & 2\\ -5 & 8 & 2 & 7\\ 4 & -5 & -3 & -2\\ 7 & -8 & -4 & -5 \end{vmatrix} =
+\]
+\krok{Úprava 1. sloupce: k 2. řádku přičteme $(-5)$-násobek 1. řádku, ke 3. řádku $4$-násobek a ke 4. řádku $7$-násobek 1. řádku.}
+\[
+= 3\cdot\begin{vmatrix} -1 & 3 & 1 & 2\\ 0 & -7 & -3 & -3\\ 0 & 7 & 1 & 6\\ 0 & 13 & 3 & 9 \end{vmatrix} =
+\]
+\[
+= \underbrace{3\cdot(-1)\cdot(-1)^{1+1}}_{-3}\cdot
+\begin{vmatrix} -7 & -3 & -3\\ 7 & 1 & 6\\ 13 & 3 & 9 \end{vmatrix} =
+\]
+\krok{Rozvoj podle 1. sloupce; pak úprava 2. sloupce: k 1. řádku přičteme $3$-násobek 2. řádku, ke 3. řádku $(-3)$-násobek 2. řádku.}
+\[
+= -3\cdot\begin{vmatrix} 14 & 0 & 15\\ 7 & 1 & 6\\ -8 & 0 & -9 \end{vmatrix}
+= \underbrace{-3\cdot1\cdot(-1)^{2+2}}_{-3}\cdot\begin{vmatrix} 14 & 15\\ -8 & -9 \end{vmatrix}
+= -3\big(14\cdot(-9)-15\cdot(-8)\big) =
+\]
+\krok{Rozvoj podle 2. sloupce.}
+\[
+= -3\,(-126+120) = -3\cdot(-6) = \vysl{18}
+\]
+
+\medskip
+\hrule
+\medskip
+
+\textbf{b)}
+\[
+\begin{vmatrix} -5 & 0 & -1 & -1\\ -1 & 3 & 0 & 2\\ -1 & 1 & 2 & 0\\ 2 & 1 & 1 & 1 \end{vmatrix}
+= \begin{vmatrix} -3 & 1 & 0 & 0\\ -1 & 3 & 0 & 2\\ -5 & -1 & 0 & -2\\ 2 & 1 & 1 & 1 \end{vmatrix} =
+\]
+\krok{Úprava 3. sloupce: k 1. řádku přičteme 4. řádek, ke 3. řádku $(-2)$-násobek 4. řádku. Pak rozvoj podle 3. sloupce.}
+\[
+= \underbrace{1\cdot(-1)^{4+3}}_{-1}\cdot\begin{vmatrix} -3 & 1 & 0\\ -1 & 3 & 2\\ -5 & -1 & -2 \end{vmatrix}
+= -1\cdot\begin{vmatrix} -3 & 1 & 0\\ -1 & 3 & 2\\ -6 & 2 & 0 \end{vmatrix} =
+\]
+\krok{Úprava 3. sloupce: ke 3. řádku přičteme 2. řádek. Pak rozvoj podle 3. sloupce.}
+\[
+= \underbrace{-1\cdot2\cdot(-1)^{2+3}}_{2}\cdot\begin{vmatrix} -3 & 1\\ -6 & 2 \end{vmatrix}
+= 2\big(\underbrace{-3\cdot2-1\cdot(-6)}_{0}\big) = \vysl{0}
+\]
+
+\end{document}

@@ -1,0 +1,154 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\newcommand{\priblizeni}[3]{%
+\begin{tikzpicture}[baseline=-3pt]
+\draw (-1.5,0) -- (1.5,0);
+\draw (0,0.1) -- (0,-0.1) node[below] {$#1$};
+\draw[red!75!black, -{Stealth}] (1.2,0.25) -- (0.3,0.25) node[midway, above] {\small $#2$};
+\node[red!75!black, right] at (1.2,0.2) {\small $#3$};
+\end{tikzpicture}}
+
+\begin{document}
+
+\section*{Z grafu funkce určete limity:}
+
+\begin{minipage}{0.6\textwidth}
+\textbf{a)}\quad
+$\displaystyle\lim_{x\to\infty}e^x=\pozn{\infty}$, \quad
+$\displaystyle\lim_{x\to-\infty}e^x=\pozn{0}$, \quad
+$\displaystyle\lim_{x\to0}e^x=\pozn{1}$, \\[6pt]
+\phantom{\textbf{a)}}\quad $\displaystyle\lim_{x\to1}e^x=\pozn{e}$
+\end{minipage}%
+\begin{minipage}{0.35\textwidth}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=5cm, height=4cm, clip=false,
+  xmin=-2.5, xmax=2, ymin=-0.6, ymax=4.2, xtick={1}, ytick={1,2.71828}, yticklabels={$1$,$e$}]
+\addplot[thick, domain=-2.5:1.4, samples=50] {exp(x)} node[right] {$e^x$};
+\addplot[only marks, mark=*, mark size=1.5pt] coordinates {(0,1)};
+\draw[dotted] (axis cs:0,2.71828) -- (axis cs:1,2.71828) -- (axis cs:1,0);
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+
+\textbf{b)}\quad
+$\displaystyle\lim_{x\to\infty}\arccotg x=\pozn{0}$, \quad
+$\displaystyle\lim_{x\to-\infty}\arccotg x=\pozn{\pi}$, \quad
+$\displaystyle\lim_{x\to0}\arccotg x=\pozn{\frac\pi2}$, \quad
+$\displaystyle\lim_{x\to1}\arccotg x=\arccotg1=\vysl{\frac\pi4}$
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=8cm, height=4.5cm, clip=false,
+  xmin=-6, xmax=6, ymin=-0.6, ymax=3.8, xtick=\empty, ytick={1.5708,3.1416}, yticklabels={$\frac{\pi}{2}$,$\pi$}]
+\addplot[domain=-6:6] {pi};
+\addplot[thick, domain=-6:6, samples=100] {pi/2 - rad(atan(x))} node[right] {$\arccotg x$};
+\addplot[only marks, mark=*, mark size=1.5pt] coordinates {(0,1.5708)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\hrule
+\section*{Vypočtěte:}
+
+\textbf{a)}
+\[
+\lim_{x\to\infty}e^{\frac{2x}{x^2-1}} = e^0 = \vysl{1} \qquad \pozn{(složená funkce)}
+\]
+\[
+\left(\lim_{x\to\infty}\frac{2x}{x^2-1} = \lim_{x\to\infty}\frac{x\cdot2}{x\left(x-\frac1x\right)} = \frac2\infty = 0\right)
+\]
+
+\textbf{b)}
+\[
+\lim_{x\to\infty}\frac{3x^4-2}{2x^4+x+3} = \lim_{x\to\infty}\frac{\cancel{x^4}\Big(3-\overbrace{\tfrac{2}{x^4}}^{\to0}\Big)}{\cancel{x^4}\Big(2+\underbrace{\tfrac{1}{x^3}}_{\to0}+\underbrace{\tfrac{3}{x^4}}_{\to0}\Big)} = \vysl{\frac32}
+\]
+
+\textbf{c)}
+\[
+\lim_{x\to-3^+}\frac{2-x}{2x^2+5x-3} = \left[\frac50\right] = \lim_{x\to-3^+}\frac{2-x}{2(x+3)\left(x-\frac12\right)} =
+\]
+\[
+D=25-4\cdot2\cdot(-3), \quad D=49 \ \Rightarrow\ x_{1,2}=\frac{-5\pm7}{4}=\begin{cases}-3\\ \frac24=\frac12\end{cases}
+\]
+\[
+= \lim_{x\to-3^+}\frac{1}{x+3}\cdot\lim_{x\to-3^+}\frac{2-x}{2\left(x-\frac12\right)} = \frac{1}{0^+}\cdot\frac{5}{2\left(-3-\frac12\right)} =
+\]
+\[
+= \infty\cdot\frac{5}{2\cdot\left(-\frac72\right)} = \infty\cdot\left(-\frac57\right) = \vysl{-\infty}
+\qquad \priblizeni{-3}{+}{(x+3)>0}
+\]
+
+\newpage
+\textbf{d)}
+\[
+\lim_{x\to4^+}\ln\frac{3x+1}{x^2-4x} = \ln\text{\uv{$\infty$}} = \infty \qquad \Big(\lim_{x\to\infty}\ln x=\infty\Big)
+\]
+\[
+\lim_{x\to4^+}\frac{3x+1}{x^2-4x} = \lim_{x\to4^+}\frac{3x+1}{x(x-4)} = \lim_{x\to4^+}\frac{1}{x-4}\cdot\lim\frac{3x+1}{x} =
+\]
+\[
+= \frac{1}{0^+}\cdot\frac{3\cdot4+1}{4} = \infty\cdot\frac{13}{4} = \vysl{\infty}
+\qquad \priblizeni{4}{}{(x-4)>0}
+\]
+
+\hrule
+\medskip
+\textbf{e)}
+\begin{align*}
+\lim_{x\to-\infty}\left(x^3-x+2\right) &= \lim_{x\to-\infty}x\Big(x^2-1+\underbrace{\tfrac2x}_{\to0}\Big) =\\
+&= -\infty\cdot(-\infty)^2 = -\infty\cdot(+\infty) = \vysl{-\infty}
+\end{align*}
+
+\pozn{\textbf{!!}} \quad
+\fcolorbox{red!75!black}{white}{$\displaystyle\lim_{x\to-\infty}x^3-x+2$} $=(-\infty)^3-x+2 = -\infty-x+2$
+\quad (lim jen pro první člen)
+
+\pozn{Špatný zápis, pokud chceme limitu z celého výrazu $\left(x^3-x+2\right)$.}
+
+\end{document}

@@ -1,0 +1,133 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+
+\begin{document}
+
+\section*{PRŮBĚH FUNKCE}
+
+\begin{minipage}{0.6\textwidth}
+\[ f(x) = \frac{e^x}{x+1} \]
+\end{minipage}%
+\begin{minipage}{0.35\textwidth}
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=4.5cm, height=3.5cm, clip=false,
+  xmin=-2.5, xmax=2, ymin=-0.8, ymax=4, xtick=\empty, ytick={1}]
+\addplot[thick, domain=-2.5:1.3, samples=50] {exp(x)} node[right] {$e^x$};
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+
+\textbf{1)}\quad $D(f)=\mathbb{R}-\{-1\}$ \qquad znaménko $f(x)$: \ \znam{a/-1/o}{-,+}
+
+\hrule
+\medskip
+\textbf{2)}
+\[
+f'(x) = \frac{e^x\cdot(x+1)-e^x\cdot1}{(x+1)^2} = \frac{e^x\cdot x+e^x-e^x}{(x+1)^2} = \frac{x\cdot e^x}{(x+1)^2}
+\]
+$f'(x)=0$ pro $x\cdot e^x=0$, tj. $x=0$ \qquad znaménko $f'(x)$: \ \znam{a/-1/o,b/0/x}{-,-,+}
+
+rostoucí v $(0,\infty)$\\
+klesající v $(-\infty,-1)\cup(-1,0)$ \qquad lokální minimum $E[0,1]$: \quad $f(0)=\dfrac{e^0}{0+1}=1$
+
+\hrule
+\medskip
+\textbf{3)}
+\begin{align*}
+f''(x) &= \frac{\left(1\cdot e^x+x\cdot e^x\right)(x+1)^2-xe^x\cdot2(x+1)}{(x+1)^4}
+= \frac{(x+1)\left[\left(e^x+xe^x\right)(x+1)-2xe^x\right]}{(x+1)^4} =\\
+&= \frac{e^x\cdot x+e^x+x^2\cdot e^x+x\cdot e^x-2xe^x}{(x+1)^3} = \frac{e^x\left(x^2+1\right)}{(x+1)^3}
+\end{align*}
+$f''(x)\ne0$ \qquad znaménko: \ \znam{a/-1/o}{-,+}
+
+konvexní v $(-1,\infty)$\\
+konkávní v $(-\infty,-1)$ \qquad nemá inflexní bod
+
+\hrule
+\medskip
+\textbf{4)} asymptoty:
+
+\begin{minipage}{0.6\textwidth}
+svislé:
+\[
+\left.\begin{array}{l}
+\displaystyle\lim_{x\to-1^+}\frac{e^x}{x+1} = \frac{e^{-1}}{0^+} = \infty\\[10pt]
+\displaystyle\lim_{x\to-1^-}\frac{e^x}{x+1} = \frac{e^{-1}}{0^-} = -\infty
+\end{array}\right\}\ \text{svislá asymptota } x=-1
+\]
+vodorovné:
+\[
+\left.\begin{array}{l}
+\displaystyle\lim_{x\to\infty}\frac{e^x}{x+1} = \left[\frac\infty\infty\right] \overset{\text{L.P.}}{=} \lim_{x\to\infty}\frac{e^x}{1} = \infty\\[10pt]
+\displaystyle\lim_{x\to-\infty}\frac{e^x}{x+1} = \frac{0^+}{-\infty} = 0
+\end{array}\right\}
+\]
+vodorovná asymptota $y=0$ pro $x\to-\infty$
+\end{minipage}%
+\begin{minipage}{0.4\textwidth}
+\textbf{GRAF:}\\
+\begin{tikzpicture}
+\begin{axis}[axis lines=middle, width=6cm, height=7cm, clip=false,
+  xmin=-4, xmax=2, ymin=-5, ymax=5, xtick={-1}, ytick=\empty,
+  xticklabel style={below right}]
+\addplot[thick, domain=-4:-1.2, samples=60] {exp(x)/(x+1)};
+\addplot[thick, domain=-0.75:1.5, samples=60] {exp(x)/(x+1)};
+\draw[dashed] (axis cs:-1,-5) -- (axis cs:-1,5);
+\addplot[only marks, mark=*, mark size=1.5pt] coordinates {(0,1)};
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+
+šikmá: $y=ax+b$
+\begin{align*}
+a &= \lim_{x\to\infty}\frac{f(x)}{x} = \lim_{x\to\infty}\frac{e^x}{x(x+1)} = \lim_{x\to\infty}\frac{e^x}{x^2+x}
+=\\ &= \left[\frac\infty\infty\right] \overset{\text{L.P.}}{=} \lim_{x\to\infty}\frac{e^x}{2x+1} = \left[\frac\infty\infty\right]
+\overset{\text{L.P.}}{=} \lim_{x\to\infty}\frac{e^x}{2} = \infty \ \longrightarrow\ \text{není}\\
+a &= \lim_{x\to-\infty}\frac{f(x)}{x} = \lim_{x\to-\infty}\frac{e^x}{x(x+1)} = \frac{0^+}{\infty} = 0 \ \longrightarrow\ \text{není}
+\end{align*}
+nemá šikmou asymptotu
+
+\end{document}

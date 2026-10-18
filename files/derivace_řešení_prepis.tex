@@ -1,0 +1,155 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+
+\begin{document}
+\section*{DERIVACE FUNKCE}
+
+\newcommand{\lnf}{\ln\frac{x+1}{x+2}}
+
+\textbf{\textcircled{1}}\quad $y=e^{\sqrt{x^2+x+1}}$
+\begin{align*}
+y' &= e^{\sqrt{x^2+x+1}}\cdot\left(\sqrt{x^2+x+1}\right)' = e^{\sqrt{x^2+x+1}}\cdot\left(\left(x^2+x+1\right)^{\frac12}\right)' =\\
+&= e^{\sqrt{x^2+x+1}}\cdot\frac12\left(x^2+x+1\right)^{\frac12-1}\cdot\left(x^2+x+1\right)' =\\
+&= e^{\sqrt{x^2+x+1}}\cdot\frac12\left(x^2+x+1\right)^{-\frac12}\cdot(2x+1) = \vysl{\frac{(2x+1)\cdot e^{\sqrt{x^2+x+1}}}{2\sqrt{x^2+x+1}}}
+\end{align*}
+
+\hrule
+\medskip
+\textbf{\textcircled{2}}\quad $y=\sqrt{\arctg\lnf}\quad\left(=\left(\arctg\lnf\right)^{\frac12}\right)$
+\begin{align*}
+y' &= \frac12\left(\arctg\lnf\right)^{\frac12-1}\cdot\left(\arctg\lnf\right)' =\\
+&= \frac12\left(\arctg\lnf\right)^{-\frac12}\cdot\frac{1}{1+\left(\lnf\right)^2}\cdot\left(\lnf\right)' =\\
+&= \frac{1}{2\sqrt{\arctg\lnf}}\cdot\frac{1}{1+\ln^2\frac{x+1}{x+2}}\cdot\frac{1}{\frac{x+1}{x+2}}\cdot\left(\frac{x+1}{x+2}\right)' =\\
+&= \frac{1}{2\sqrt{\arctg\lnf}}\cdot\frac{1}{1+\ln^2\frac{x+1}{x+2}}\cdot\frac{x+2}{x+1}\cdot\frac{(x+1)'\cdot(x+2)-(x+1)\cdot(x+2)'}{(x+2)^2} =\\
+&= \frac{1}{2\sqrt{\arctg\lnf}}\cdot\frac{1}{1+\ln^2\frac{x+1}{x+2}}\cdot\frac{\cancel{x+2}}{x+1}\cdot\frac{1\cdot(x+2)-(x+1)\cdot1}{(x+2)^{\cancel{2}}} =\\
+&= \frac{1}{2\sqrt{\arctg\lnf}}\cdot\frac{1}{1+\ln^2\frac{x+1}{x+2}}\cdot\frac{1}{x+1}\cdot\frac{\overbrace{x+2-x-1}^{1}}{x+2} =\\
+&= \vysl{\frac{1}{2\sqrt{\arctg\lnf}\cdot\left(1+\ln^2\frac{x+1}{x+2}\right)\cdot(x+1)(x+2)}}
+\end{align*}
+
+\textbf{\textcircled{3}}\quad $y=\ln\dfrac{1}{x+\sqrt{x^2-1}}$
+\begin{align*}
+y' &= \frac{1}{\frac{1}{x+\sqrt{x^2-1}}}\cdot\Big(\underbrace{\frac{1}{x+\sqrt{x^2-1}}}_{\left(x+\sqrt{x^2-1}\right)^{-1}}\Big)' =\\
+&= \left(x+\sqrt{x^2-1}\right)\cdot(-1)\left(x+\sqrt{x^2-1}\right)^{-1-1}\cdot\Big(x+\underbrace{\sqrt{x^2-1}}_{\left(x^2-1\right)^{\frac12}}\Big)' =\\
+&= \left(x+\sqrt{x^2-1}\right)\cdot(-1)\left(x+\sqrt{x^2-1}\right)^{-2}\cdot\left(1+\frac12\left(x^2-1\right)^{\frac12-1}\cdot\left(x^2-1\right)'\right) =\\
+&= \frac{\cancel{x+\sqrt{x^2-1}}}{-1\cdot\left(x+\sqrt{x^2-1}\right)^{\cancel{2}}}\cdot\left(1+\frac12\left(x^2-1\right)^{-\frac12}\cdot2x\right) =\\
+&= \frac{-1}{x+\sqrt{x^2-1}}\cdot\left(1+\frac{x}{\sqrt{x^2-1}}\right) = \frac{-1}{\cancel{x+\sqrt{x^2-1}}}\cdot\frac{\cancel{\sqrt{x^2-1}+x}}{\sqrt{x^2-1}}
+= \vysl{\frac{-1}{\sqrt{x^2-1}}}
+\end{align*}
+
+\hrule
+\medskip
+\textbf{\textcircled{4}}\quad $y=\ln\arctg\dfrac{\sin x}{1+\cos x}$
+\begin{align*}
+y' &= \frac{1}{\arctg\frac{\sin x}{1+\cos x}}\cdot\left(\arctg\frac{\sin x}{1+\cos x}\right)' =
+\frac{1}{\arctg\frac{\sin x}{1+\cos x}}\cdot\frac{1}{1+\left(\frac{\sin x}{1+\cos x}\right)^2}\cdot\left(\frac{\sin x}{1+\cos x}\right)' =\\
+&= \frac{1}{\arctg\frac{\sin x}{1+\cos x}}\cdot\frac{1}{1+\frac{\sin^2x}{(1+\cos x)^2}}\cdot\frac{(\sin x)'(1+\cos x)-\sin x(1+\cos x)'}{(1+\cos x)^2} =\\
+&= \frac{1}{\arctg\frac{\sin x}{1+\cos x}}\cdot\frac{1}{\frac{(1+\cos x)^2+\sin^2x}{(1+\cos x)^2}}\cdot\frac{\cos x(1+\cos x)-\sin x(-\sin x)}{(1+\cos x)^2} =\\
+&= \frac{1}{\arctg\frac{\sin x}{1+\cos x}}\cdot\frac{\cos x+\overbrace{\cos^2x+\sin^2x}^{1}}{1+2\cos x+\underbrace{\cos^2x+\sin^2x}_{1}} =\\
+&= \frac{1}{\arctg\frac{\sin x}{1+\cos x}}\cdot\frac{\cancel{\cos x+1}}{\underbrace{2+2\cos x}_{2(\cancel{1+\cos x})}}
+= \vysl{\frac{1}{2\arctg\frac{\sin x}{1+\cos x}}}
+\end{align*}
+
+\hrule
+\medskip
+\textbf{\textcircled{5}}\quad $y=\dfrac{1}{\log\left(3x^2+x+1\right)}=\left(\log\left(3x^2+x+1\right)\right)^{-1}$
+\begin{align*}
+y' &= (-1)\cdot\left(\log\left(3x^2+x+1\right)\right)^{-2}\cdot\left(\log\left(3x^2+x+1\right)\right)' =\\
+&= \frac{-1}{\log^2\left(3x^2+x+1\right)}\cdot\frac{1}{\left(3x^2+x+1\right)\cdot\ln10}\cdot\left(3x^2+x+1\right)' =\\
+&= \vysl{\frac{-(6x+1)}{\left(3x^2+x+1\right)\cdot\ln10\cdot\log^2\left(3x^2+x+1\right)}}
+\end{align*}
+
+\hrule
+\medskip
+\textbf{\textcircled{6}}\quad $y=5^{x^2-2x+1}$
+\[
+y' = 5^{x^2-2x+1}\cdot\ln5\cdot\left(x^2-2x+1\right)' = \vysl{(2x-2)\ln5\cdot5^{x^2-2x+1}}
+\]
+
+\hrule
+\medskip
+\textbf{\textcircled{7}}\quad $y=\dfrac{\cos x}{2\sin^2x}$
+\begin{align*}
+y' &= \frac{(\cos x)'\cdot2\sin^2x-\cos x\left(2\sin^2x\right)'}{\left(2\sin^2x\right)^2}
+= \frac{-\sin x\cdot2\sin^2x-\cos x\cdot2\cdot2(\sin x)^{2-1}\cdot(\sin x)'}{4\sin^4x} =\\
+&= \frac{-2\sin^3x-4\cos x\cdot\sin x\cdot(\cos x)}{4\sin^4x}
+= \frac{-2\sin^3x-4\cos^2x\sin x}{4\sin^4x} =\\
+&= \frac{-\cancel{2}\,\cancel{\sin x}\big(\overbrace{\sin^2x+\cos^2x}^{1}+\cos^2x\big)}{\underset{2}{\cancel{4}}\sin^{\cancel{4}\,3}x} = \vysl{-\frac{1+\cos^2x}{2\sin^3x}}
+\end{align*}
+
+\textbf{\textcircled{8}}\quad $y=\dfrac{2x^3}{\sqrt x}+\dfrac{x}{2\sqrt[3]x} = 2\,\dfrac{x^3}{x^{\frac12}}+\dfrac12\,\dfrac{x}{x^{\frac13}} = 2x^{\frac52}+\dfrac12x^{\frac23}$
+\quad {\small (jen úpravy mocnin, pak až derivovat)}
+\[
+y' = 2\cdot\frac52x^{\frac52-1}+\frac12\cdot\frac23x^{\frac23-1} = 5x^{\frac32}+\frac13x^{-\frac13} = \vysl{5\sqrt{x^3}+\frac{1}{3\sqrt[3]x}}
+\]
+
+\hrule
+\medskip
+\textbf{\textcircled{9}}\quad $y=\dfrac{x}{\sqrt{1-x^2}}\cdot\arcsin x$
+\begin{align*}
+y' &= \left(\frac{x}{\sqrt{1-x^2}}\right)'\cdot\arcsin x+\frac{x}{\sqrt{1-x^2}}\cdot(\arcsin x)' =\\
+&= \frac{(x)'\cdot\sqrt{1-x^2}-x\cdot\left(\sqrt{1-x^2}\right)'}{\left(\sqrt{1-x^2}\right)^2}\cdot\arcsin x+\frac{x}{\sqrt{1-x^2}}\cdot\frac{1}{\sqrt{1-x^2}} =\\
+&= \frac{1\cdot\sqrt{1-x^2}-x\cdot\frac12\left(1-x^2\right)^{-\frac12}\cdot\left(1-x^2\right)'}{1-x^2}\cdot\arcsin x+\frac{x}{1-x^2} =\\
+&= \frac{\sqrt{1-x^2}-\frac{x}{2\sqrt{1-x^2}}\cdot(-2x)}{1-x^2}\cdot\arcsin x+\frac{x}{1-x^2}
+= \frac{\sqrt{1-x^2}+\frac{2x^2}{2\sqrt{1-x^2}}}{1-x^2}\cdot\arcsin x+\frac{x}{1-x^2} =\\
+&= \frac{\dfrac{1\cancel{-x^2}\cancel{+x^2}}{\sqrt{1-x^2}}}{1-x^2}\cdot\arcsin x+\frac{x}{1-x^2}
+= \vysl{\frac{1}{\sqrt{1-x^2}\cdot\left(1-x^2\right)}\cdot\arcsin x+\frac{x}{1-x^2}}
+\end{align*}
+lze ještě upravit takto:
+\[
+\frac{\arcsin x+x\cdot\sqrt{1-x^2}}{\sqrt{1-x^2}\cdot\left(1-x^2\right)} = \vysl{\frac{\arcsin x+x\cdot\sqrt{1-x^2}}{\sqrt{\left(1-x^2\right)^3}}}
+\]
+
+\hrule
+\medskip
+\textbf{\textcircled{10}}\quad $y=\tg\sqrt x+\underbrace{\tg\frac\pi4}_{\text{konstanta}}$
+\[
+y' = \frac{1}{\cos^2\sqrt x}\cdot\big(\underbrace{\sqrt x}_{x^{\frac12}}\big)'+0 = \frac{1}{\cos^2\sqrt x}\cdot\frac12\cdot x^{-\frac12} = \vysl{\frac{1}{2\sqrt x\cos^2\sqrt x}}
+\]
+
+\end{document}

@@ -1,0 +1,281 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\begin{document}
+\large
+Pro funkci $f(x)=\arctg\frac{x-1}{x-2}$ určete:
+\begin{enumerate}[label=\alph*), nosep]
+\item $D(f)$ a vodorovnou asymptotu
+\item tečna a normála v $x_0=1$
+\end{enumerate}
+
+\medskip
+\textbf{a)}\\
+$D(f)=\mathbb{R}-\{2\}$
+\begin{align*}
+&\lim_{x\to\infty}\arctg\frac{x-1}{x-2}=\arctg1=\frac\pi4\\
+&\lim_{x\to-\infty}\arctg\frac{x-1}{x-2}=\arctg1=\frac\pi4
+\end{align*}
+vodorovná asymptota $y=\frac\pi4$ pro $x\to\pm\infty$
+
+\medskip
+\textbf{b)}
+\begin{align*}
+f'(x) &= \frac{1}{1+\left(\frac{x-1}{x-2}\right)^2}\cdot\frac{1\cdot(x-2)-(x-1)\cdot1}{(x-2)^2}
+= \frac{1}{\frac{x^2-4x+4+x^2-2x+1}{(x-2)^2}}\cdot\frac{x-2-x+1}{(x-2)^2} =\\
+&= \frac{-1}{2x^2-6x+5}
+\end{align*}
+\[
+f'(1)=\frac{-1}{2-6+5}=\frac{-1}{1}=-1
+\]
+\[
+\begin{array}{ll}
+t\colon\ y-y_0=f'(x_0)\cdot(x-x_0) & t\colon\ y-0=-1\cdot(x-1)\\
+ & \qquad\quad\ \underline{y=1-x}\\[6pt]
+n\colon\ y-y_0=-\dfrac{1}{f'(x_0)}\cdot(x-x_0) & n\colon\ y-0=1\cdot(x-1)\\
+ & \qquad\quad\ \underline{y=x-1}
+\end{array}
+\]
+$f(1)=\arctg0=0$
+
+\newpage
+Pro funkci $f(x)=\arcsin\left(x^2\right)$ určete:
+\begin{enumerate}[label=\alph*), nosep]
+\item $D(f)$, intervaly monotonie a lokální extrémy
+\item rovnici tečny a normály v $x_0=\frac{1}{\sqrt2}$
+\end{enumerate}
+
+\medskip
+\textbf{a)}\\
+$D(f)=\langle-1,1\rangle$
+\[
+f'(x)=\frac{1}{\sqrt{1-x^4}}\cdot2x
+\]
+\begin{minipage}{0.5\textwidth}
+$f'(x)=0$ pro $x=0$
+
+\medskip
+rostoucí $\langle0,1\rangle$\\
+klesající $\langle-1,0\rangle$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\znam{a/0/x}{-\ \searrow,\nearrow\ +}
+\end{minipage}
+
+\medskip
+\begin{tabular}{@{}p{7.5cm}l@{}}
+$f(0)=\arcsin0=0$ & lokální minimum $[0,0]$\\
+$f(1)=\arcsin1=\sin\frac\pi2=1$ & lokální maximum $\left[1,\frac\pi2\right]$, $\left[-1,\frac\pi2\right]$
+\end{tabular}
+
+\medskip
+\textbf{b)}
+\[
+f'\left(\frac{1}{\sqrt2}\right)=\frac{2\cdot\frac{1}{\sqrt2}}{\sqrt{1-\frac14}}=\frac{\sqrt2}{\sqrt{\frac34}}=\frac{\sqrt2}{\frac{\sqrt3}{2}}=\frac{2\cdot\sqrt2}{\sqrt3}
+\]
+\[
+y_0=f(x_0)=\arcsin\frac12=\frac\pi6
+\]
+\[
+\begin{array}{ll}
+t\colon\ y-y_0=f'(x_0)\cdot(x-x_0) & t\colon\ y-\frac\pi6=\dfrac{2\cdot\sqrt2}{\sqrt3}\cdot\left(x-\dfrac{1}{\sqrt2}\right)\\[12pt]
+n\colon\ y-y_0=-\dfrac{1}{f'(x_0)}\cdot(x-x_0) & n\colon\ y-\frac\pi6=-\dfrac{\sqrt3}{2\cdot\sqrt2}\cdot\left(x-\dfrac{1}{\sqrt2}\right)
+\end{array}
+\]
+
+\newpage
+Pro funkci $f(x)=\ln\frac{x+1}{1-x}$ určete:
+\begin{enumerate}[label=\alph*), nosep]
+\item $D(f)$
+\item lokální extrémy a intervaly monotonie
+\item inflexní body a intervaly konvexnosti a konkávnosti
+\end{enumerate}
+
+\medskip
+\textbf{a)}\\
+\begin{minipage}{0.5\textwidth}
+$\dfrac{x+1}{1-x}>0$\\[4pt]
+$D(f)=(-1,1)$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\znam{a/-1/x,b/1/x}{-,+,-}
+\end{minipage}
+
+\medskip
+\textbf{b)}
+\begin{align*}
+f'(x) &= \frac{1}{\frac{x+1}{1-x}}\cdot\frac{1\cdot(1-x)-(x+1)\cdot(-1)}{(1-x)^2} = \frac{1-x}{x+1}\cdot\frac{1-x+x+1}{(1-x)^2}
+= \frac{2}{(x+1)\cdot(1-x)} = \frac{2}{1-x^2} =\\
+&= 2\cdot\left(1-x^2\right)^{-1}
+\end{align*}
+$\Rightarrow$ nemá extrémy, všude rostoucí, $f'(x)>0$ v $(-1,1)$
+
+\medskip
+\textbf{c)}
+\[
+f''(x)=-2\cdot\left(1-x^2\right)^{-2}\cdot(-2x)=\frac{4x}{\left(1-x^2\right)^2}
+\]
+$f''(x)=0$ pro $x=0$
+
+\medskip
+\begin{minipage}{0.5\textwidth}
+konvexní v $(0,1)$\\
+konkávní v $(-1,0)$\\
+inflexní bod $I\,[0,0]$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\znam{a/0/x}{-,+}
+\end{minipage}
+
+\newpage
+Pro funkci $f(x)=e^{\frac1x}$ určete:
+\begin{enumerate}[label=\alph*), nosep]
+\item inflexní body, intervaly konvexnosti a konkávnosti
+\item vodorovnou asymptotu
+\end{enumerate}
+
+\medskip
+\textbf{a)}\\
+$D(f)=\mathbb{R}-\{0\}$
+\begin{align*}
+f'(x) &= e^{\frac1x}\cdot\left(\frac1x\right)' = -1\cdot x^{-2}\cdot e^{\frac1x} = -\frac{1}{x^2}\cdot e^{\frac1x}\\
+f''(x) &= -1\cdot(-2)\cdot x^{-3}\cdot e^{\frac1x}+\left(-1\cdot x^{-2}\cdot e^{\frac1x}\cdot(-1)\cdot x^{-2}\right)
+= \frac{2\cdot e^{\frac1x}}{x^3}+\frac{e^{\frac1x}}{x^4} = \frac{(2x+1)\cdot e^{\frac1x}}{x^4}
+\end{align*}
+$f''(x)=0$ pro $2x+1=0$, tj. $x=-\frac12$
+
+\medskip
+\begin{minipage}{0.55\textwidth}
+konvexní $\left(-\frac12,0\right)\cup(0,\infty)$\\
+konkávní $\left(-\infty,-\frac12\right)$\\
+inflexní bod $I\left[-\frac12,e^{-2}\right]$
+\end{minipage}%
+\begin{minipage}{0.4\textwidth}
+\znam{a/-\frac12/x}{-,+}
+\end{minipage}
+
+\medskip
+\textbf{b)}\\
+\begin{minipage}{0.5\textwidth}
+$\displaystyle\lim_{x\to\infty}e^{\frac1x}=e^0=1$\\[4pt]
+$\displaystyle\lim_{x\to-\infty}e^{\frac1x}=e^0=1$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+$\underline{y=1}$ pro $x\to\pm\infty$
+\end{minipage}
+
+\newpage
+Pro funkci $f(x)=\frac{1}{e^x}$ určete:
+\begin{enumerate}[label=\alph*), nosep]
+\item inflexní body, intervaly konvexnosti a konkávnosti
+\item vodorovnou asymptotu
+\end{enumerate}
+
+\medskip
+\textbf{a)}\\
+$D(f)=\mathbb{R}$
+\begin{align*}
+f'(x) &= \frac{-e^x}{\left(e^x\right)^2} = -\frac{1}{e^x}\\
+f''(x) &= \frac{e^x}{\left(e^x\right)^2} = \frac{1}{e^x}
+\end{align*}
+$\Rightarrow$ inflexní body nemá, všude konvexní
+
+\medskip
+\textbf{b)}
+\begin{align*}
+&\lim_{x\to\infty}\frac{1}{e^x}=0\\
+&\lim_{x\to-\infty}\frac{1}{e^x}=\infty
+\end{align*}
+vodorovná asymptota $y=0$ pro $x\to\infty$
+
+\newpage
+Je daná funkce $f(x)=\frac{e^{3x}}{x^2}$, určete:
+\begin{enumerate}[label=\alph*), nosep]
+\item $D(f)$, lokální extrémy a intervaly monotonie
+\item inflexní body a intervaly konvexnosti a konkávnosti
+\end{enumerate}
+
+\medskip
+$D(f)=\mathbb{R}-\{0\}$
+
+\textbf{a)}
+\[
+f'(x)=\frac{\left(e^{3x}\right)'\cdot x^2-e^{3x}\cdot2x}{x^4}=\frac{3\cdot e^{3x}\cdot x^2-2x\cdot e^{3x}}{x^4}
+=\frac{e^{3x}\cdot x\cdot(3x-2)}{x^4}=\frac{e^{3x}\cdot(3x-2)}{x^3}
+\]
+$f'(x)=0$ pro $3x-2=0$, tj. $x=\frac23$
+
+\medskip
+\begin{minipage}{0.5\textwidth}
+rostoucí v $(-\infty,0)$ a $\left(\frac23,\infty\right)$\\
+klesající v $\left(0,\frac23\right)$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\znam{a/0/o,b/\frac23/x}{+\ \nearrow,-\ \searrow,\nearrow\ +}
+\end{minipage}
+
+\[
+f\left(\tfrac23\right)=\frac{e^{3\cdot\frac23}}{\left(\frac23\right)^2}=\frac94\cdot e^2
+\qquad\qquad \text{lokální minimum } E\left[\tfrac23,\ \tfrac94\cdot e^2\right]
+\]
+
+\medskip
+\textbf{b)}
+\begin{align*}
+f''(x) &= \frac{\left(e^{3x}\cdot(3x-2)\right)'\cdot x^3-\left(e^{3x}\cdot(3x-2)\cdot3x^2\right)}{x^6} =\\
+&= \frac{\left(e^{3x}\cdot3\cdot(3x-2)+e^{3x}\cdot3\right)\cdot x^3-\left(e^{3x}\cdot\left(9x^3-6x^2\right)\right)}{x^6} =\\
+&= \frac{e^{3x}\cdot x^2\cdot\left(9x^2-6x+3x-9x+6\right)}{x^6} = \frac{e^{3x}\cdot\left(9x^2-12x+6\right)}{x^4}
+= \frac{3\cdot e^{3x}\cdot\left(3x^2-4x+2\right)}{x^4}
+\end{align*}
+\begin{align*}
+f''(x)=0 \text{ pro } 3x^2-4x+2&=0\\
+D=b^2-4\cdot a\cdot c=16-4\cdot3\cdot2&=-8<0
+\end{align*}
+$\Rightarrow$ nemá inflexní body, všude $f''(x)>0$, všude konvexní $(-\infty,0)\cup(0,\infty)$
+
+\end{document}

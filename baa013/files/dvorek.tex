@@ -1,0 +1,116 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[a4paper,landscape,margin=1cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,patterns,babel}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\vysl}[1]{\boxed{\color{red!75!black}#1}}
+\newcommand{\pozn}[1]{{\color{red!75!black}#1}}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\subst}[1]{\left|\begin{array}{l}#1\end{array}\right|}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\usepackage{tcolorbox}
+\newtcolorbox{pomocny}{colframe=red!75!black, colback=white, coltitle=white, fonttitle=\bfseries, title={Pomocný výpočet:}, sharp corners}
+\newcommand{\dy}{\,\mathrm{d}y}
+% znaménkové schéma: \znam{bod/popis/typ,...}{znaménka v intervalech}
+% typ: o = vyloučený bod (kroužek), x = obyčejný bod
+\newcommand{\znam}[2]{%
+\begin{tikzpicture}[baseline=-3pt]
+\def\n{0}
+\foreach \p/\l/\t [count=\i] in {#1} {\xdef\n{\i}}
+\pgfmathsetmacro{\L}{1.6*(\n+1)}
+\draw (0,0) -- (\L,0);
+\foreach \p/\l/\t [count=\i] in {#1} {
+  \pgfmathsetmacro{\xx}{1.6*\i}
+  \ifnum\pdfstrcmp{\t}{o}=0 \draw[fill=white] (\xx,0) circle (2.5pt); \draw (\xx-0.09,0) -- (\xx+0.09,0) (\xx,-0.09) -- (\xx,0.09);
+  \else \draw (\xx,0.1) -- (\xx,-0.1); \fi
+  \node[below=2pt] at (\xx,0) {\small $\l$};
+}
+\foreach \s [count=\i] in {#2} {
+  \pgfmathsetmacro{\xx}{1.6*\i-0.8}
+  \node[above] at (\xx,0) {$\s$};
+}
+\end{tikzpicture}}
+\newcommand{\aug}[1]{\left(\begin{array}{rrr|rrr}#1\end{array}\right)}
+\newcommand{\krok}[1]{\text{\small\color{orange!80!black}#1}}
+
+\begin{document}
+\vspace*{\fill}\begin{center}
+\begin{tikzpicture}[scale=0.66, ridge/.style={line width=1.6pt, magenta!80!red}]
+\draw[step=1, gray!35, very thin] (-1,-1) grid (33,25);
+\fill[white] (6,4) rectangle (14,10);
+\begin{scope}\clip (6,4) rectangle (14,10);
+\foreach \i in {-8,-7.5,...,8} \draw[thin] (6+\i,4) -- ++(6,6);
+\end{scope}
+\draw[thick] (6,4) rectangle (14,10);
+\node[fill=white, inner sep=2pt, font=\sffamily] at (10,7) {DVOREK};
+\draw[very thick] (0,24) -- (8,24) -- (8,19) -- (16,19) -- (16,15) -- (31,15) -- (31,7) -- (18,7) -- (18,0) -- (0,0) -- cycle;
+\draw[thick] (8.6,21.9) -- (8.6,19.6) -- (13,19.6);
+\draw[thick] (31.7,15) -- (31.7,6.4) -- (27,6.4);
+\draw[ridge] (0,24) -- (4,20);
+\draw[ridge] (8,24) -- (4,20);
+\draw[ridge] (4,20) -- (4,18);
+\draw[ridge] (8,22) -- (4,18);
+\draw[ridge] (4,18) -- (6,16);
+\draw[ridge] (6,16) -- (7,16);
+\draw[ridge] (7,16) -- (9,18);
+\draw[ridge] (9,18) -- (8,19);
+\draw[ridge] (9,18) -- (9,19);
+\draw[ridge] (6,16) -- (3,13);
+\draw[ridge] (3,13) -- (3,3);
+\draw[ridge] (3,13) -- (6,10);
+\draw[ridge] (3,3) -- (0,0);
+\draw[ridge] (3,3) -- (4,2);
+\draw[ridge] (4,2) -- (6,4);
+\draw[ridge] (4,2) -- (16,2);
+\draw[ridge] (16,2) -- (14,4);
+\draw[ridge] (16,2) -- (18,0);
+\draw[ridge] (16,2) -- (16,9);
+\draw[ridge] (16,9) -- (18,7);
+\draw[ridge] (16,9) -- (18,11);
+\draw[ridge] (18,11) -- (31,11);
+\draw[ridge] (31,11) -- (27,7);
+\draw[ridge] (13,19) -- (8.5,14.5);
+\draw[ridge] (7,16) -- (8.5,14.5);
+\draw[ridge] (8.5,14.5) -- (11.5,14.5);
+\draw[ridge] (16,19) -- (11.5,14.5);
+\draw[ridge] (11.5,14.5) -- (13.5,12.5);
+\draw[ridge] (16,15) -- (13.5,12.5);
+\draw[ridge] (13.5,12.5) -- (16.5,12.5);
+\draw[ridge] (16.5,12.5) -- (18,11);
+\draw[ridge] (16.5,12.5) -- (14,10);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (4.4,22.1) -- ++(0,0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (6.3,21.4) -- ++(0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (6.5,18.2) -- ++(0,0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (1.7,16.5) -- ++(-0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (10.2,17.8) -- ++(0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (12.1,16.7) -- ++(0,0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (14.2,15.7) -- ++(0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (6.4,13.8) -- ++(0,-0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (10.7,12.9) -- ++(0,-0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (22.4,12.9) -- ++(0,0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (16.8,10.7) -- ++(-0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (22.4,9.5) -- ++(0,-0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (30,8.5) -- ++(-0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (1.6,7.6) -- ++(-0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (3.8,7.5) -- ++(0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (15.5,6.6) -- ++(-0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (16.7,5.5) -- ++(0.8,0);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (9.4,2.7) -- ++(0,0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (9.4,1.3) -- ++(0,-0.8);
+\draw[-{Stealth[length=4pt]}, gray!50!black] (9,18.6) -- ++(-0.8,0);
+\end{tikzpicture}
+\end{center}\vspace*{\fill}
+\end{document}

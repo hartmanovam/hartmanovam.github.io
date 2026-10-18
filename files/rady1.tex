@@ -1,0 +1,208 @@
+\documentclass[11pt,a4paper,fleqn]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor,cancel,enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,fit,shapes.geometric,decorations.pathmorphing,babel}
+\setlength{\mathindent}{1.5em}
+\renewcommand{\CancelColor}{\color{red!75!black}}
+% značky pro šipky a kroužky (více průchodů pdflatex)
+\newcommand{\tm}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\displaystyle #2$};}
+\newcommand{\tmt}[2]{\tikz[remember picture, baseline=(#1.base)]\node[inner sep=0pt, outer sep=1pt] (#1) {$\textstyle #2$};}
+\newcommand{\cerv}[1]{{\color{red!75!black}#1}}
+\newcommand{\dvoj}[1]{\underline{\underline{#1}}}
+\newcommand{\dvojc}[1]{{\color{red!75!black}\underline{\underline{\color{black}#1}}}}
+% rámeček modrou propiskou (= černě) se jménem
+\newcommand{\rb}[2]{\tikz[remember picture, baseline=(#1.base)]\node[draw, thin, inner sep=3pt] (#1) {$\displaystyle #2$};}
+% malý náčrtek grafu: s = odmocnina, l = logaritmus
+\newcommand{\nacrt}[2]{\begin{tikzpicture}[thin, baseline=(current bounding box.north)]
+\draw (-0.7,0) -- (1.0,0); \draw (0,-0.5) -- (0,0.75);
+\ifx#1s\draw[thick] (0,0) .. controls (0.1,0.3) and (0.4,0.55) .. (0.85,0.6) node[right, font=\scriptsize] {#2};\fi
+\ifx#1l\draw[thick] (0.05,-0.5) .. controls (0.1,-0.05) and (0.35,0.3) .. (0.8,0.5);\fi
+\end{tikzpicture}}
+\tikzset{pz/.style={red!75!black, inner sep=1pt},
+  sipr/.style={-{Stealth}, semithick, red!75!black},
+  sipb/.style={-{Stealth}, thin},
+  vlnka/.style={decorate, decoration={snake, amplitude=1pt, segment length=4pt}}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\li}{\lim_{n\to\infty}}
+
+\begin{document}
+\shorthandoff{-}
+
+{\large Urči, zda řada konverguje / diverguje:}
+
+% ------------------------------------------------------------- 1.
+\begin{align*}
+\hspace*{-\mathindent}\textbf{1.)}\quad \sum_{n=1}^{\infty}\frac{(n!)^2}{(2n)!} &= \rb{p1}{\li\frac{a_{n+1}}{a_n}}
+= \li\frac{\dfrac{\left((n+1)!\right)^2}{\left(2(n+1)\right)!}}{\dfrac{(n!)^2}{(2n)!}}
+= \li\frac{\left((n+1)!\right)^2\cdot(2n)!}{\left(\tmt{d2}{2}(\tmt{dn}{n}+\tmt{d1}{1})\right)!\cdot(n!)^2} =\\[1.2em]
+&= \li\frac{(n+1)!\,(n+1)!\,(2n)!}{(2n+2)!\;n!\;n!}
+= \li\frac{(n+1)\cancel{n!}\,(n+1)\cancel{n!}\,\cancel{(2n)!}}{(2n+2)(2n+1)\cancel{(2n)!}\;\cancel{n!}\;\cancel{n!}}
+=\\
+&= \li\frac{(n+1)(n+1)}{(2n+2)(2n+1)} = \li\frac{1n^2+\dots}{4n^2+\dots} = \dvojc{\frac14}\cerv{{}<1} \qquad \text{\cerv{\large Řada konverguje}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, font=\small, inner sep=1pt] at ([yshift=-1pt]p1.south) {PODÍLOVÉ};
+\draw[sipr, thin] ([yshift=-1pt]d2.south) to[out=-60, in=-120] ([yshift=-1pt]dn.south);
+\draw[sipr, thin] ([yshift=-1pt]d2.south) to[out=-60, in=-120] ([yshift=-1pt]d1.south);
+\end{tikzpicture}
+\end{align*}
+\vspace{0.3cm}
+
+% ------------------------------------------------------------- 2.
+\[
+\hspace*{-\mathindent}\textbf{2.)}\quad \sum_{n=1}^{\infty}\tm{m2}{(-1)^n}\,\frac{\sin^2n+1}{n^2}
+= \li\frac{\sin^2n+1}{n^2} = \frac{\langle0,1\rangle+1}{\infty} = \frac{\langle1,2\rangle}{\infty} = \tm{z2}{\underline{0}}
+\begin{tikzpicture}[remember picture, overlay]
+\draw[thin, vlnka] ([yshift=-3pt]m2.south west) -- ([yshift=-3pt]m2.south east);
+\node[anchor=north] (al2) at ([yshift=-0.55cm]m2.south) {alternující};
+\draw[sipb] ([yshift=-5pt]m2.south) -- (al2.north);
+\node[draw, thin, anchor=west, font=\small] (le2) at ([xshift=1.6cm]al2.east) {LEIBNIZOVO};
+\draw[sipb] (al2.east) -- (le2.west);
+\node[pz, anchor=north, font=\large] (k2) at ([xshift=0.3cm, yshift=-0.75cm]z2.south) {Řada konverguje};
+\draw[sipb] ([xshift=-0.3cm]k2.north) -- ([yshift=-2pt]z2.south);
+\end{tikzpicture}
+\]
+\vspace{1.0cm}
+
+% ------------------------------------------------------------- 3.
+\[
+\hspace*{-\mathindent}\textbf{3.)}\quad \sum_{n=1}^{\infty}\sqrt{n-1}
+= \begin{array}{l}\text{ověříme}\\ \text{nutnou podmínku}\\ \text{konvergence}\\ \text{(všimneme si, že \underline{řada roste})}\end{array}
+= \li\tm{s3}{\sqrt{n-1}} = \infty\ \tm{n3}{\cerv{{}\ne0}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=north west, font=\large] (d3) at ([xshift=-0.3cm, yshift=-0.75cm]n3.south) {Řada DIVERGUJE};
+\draw[sipr, thin] ([yshift=-2pt]n3.south) -- ([xshift=0.3cm]d3.north west);
+\node[anchor=north, inner sep=0pt] at ([xshift=0.6cm, yshift=-0.5cm]s3.south) {\nacrt{s}{$\sqrt{n}$}};
+\end{tikzpicture}
+\]
+\vspace{0.6cm}
+
+% ------------------------------------------------------------- 4.
+\[
+\hspace*{-\mathindent}\textbf{4.)}\quad \sum_{n=1}^{\infty}\tm{m4}{(-1)^n}\,\frac{\ln n}{n}
+= \li\frac{\ln n}{n} = \frac{\infty}{\infty} \overset{\text{L.P.}}{=} \li\frac{\frac1n}{1} = \frac1\infty = \tm{z4}{\dvoj{0}}
+\begin{tikzpicture}[remember picture, overlay]
+\draw[thin, vlnka] ([yshift=-3pt]m4.south west) -- ([yshift=-3pt]m4.south east);
+\node[draw, thin, anchor=west, font=\small] (le4) at ([xshift=0.8cm, yshift=-0.75cm]m4.south east) {LEIBNIZOVO};
+\draw[sipb] ([yshift=-5pt]m4.south) |- (le4.west);
+\node[pz, anchor=north west, font=\large] (k4) at ([xshift=-0.3cm, yshift=-0.55cm]z4.south) {Řada KONVERGUJE};
+\draw[sipb] ([yshift=-4pt]z4.south) -- ([xshift=0.3cm]k4.north west);
+\end{tikzpicture}
+\]
+\vspace{0.6cm}
+
+% ------------------------------------------------------------- 5.
+\[
+\hspace*{-\mathindent}\textbf{5.)}\quad \sum_{n=1}^{\infty}\left(\frac\pi3\right)^n = \rb{p5}{\li\sqrt[n]{a_n}}
+= \li\sqrt[n]{\left(\frac\pi3\right)^n} = \li\frac\pi3 = \frac\pi3 = \frac{3{,}14\ldots}{3}\ \tm{z5}{\dvoj{{}>1}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, font=\small, inner sep=1pt] at ([yshift=-2pt]p5.south) {ODMOCNINOVÉ};
+\node[pz, anchor=north west, font=\large] (d5) at ([xshift=-0.3cm, yshift=-0.55cm]z5.south) {ŘADA DIVERGUJE};
+\draw[sipb] ([yshift=-4pt]z5.south) -- ([xshift=0.3cm]d5.north west);
+\end{tikzpicture}
+\]
+\vspace{0.6cm}
+
+% ------------------------------------------------------------- 6.
+\[
+\hspace*{-\mathindent}\textbf{6.)}\quad \sum_{n=1}^{\infty}\frac{\sin^2n+1}{2n^2} = \sum\frac{\langle0,1\rangle+1}{2n^2}
+= \tm{q6}{\sum\frac{\langle1,2\rangle}{2n^2}} = \rb{b6}{\sum\frac{\langle\frac12,1\rangle}{n^2}}
+\ \ \tikz[remember picture, baseline=(le.base)]\node[draw=red!75!black, circle, inner sep=1pt] (le) {$\le$};\ \
+\rb{c6}{\sum\frac{1}{n^2}}
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=north] at ([yshift=-1pt]b6.south) {$*$};
+\node[anchor=south west, font=\small, inner sep=1pt] (vi) at ([xshift=2pt]c6.south east) {VÍME};
+\node[anchor=north west, font=\small, align=left, inner sep=1pt] (ko) at ([xshift=0.35cm, yshift=-0.2cm]c6.south west) {KONVERGUJE\\ TATO ŘADA};
+\draw[sipb] ([xshift=0.1cm]c6.south west) |- ([yshift=4pt]ko.west);
+\draw[red!75!black, thin, vlnka] ([yshift=1pt]ko.south west) -- ([yshift=1pt]ko.south east);
+\node[draw, thin, anchor=north, align=center] at ([xshift=-1.2cm, yshift=-0.6cm]q6.south) {Srovnávací\\ s řadou $\frac{1}{n^2}$};
+\draw[red!75!black, thin] (le.south) -- ++(0,-1.9) node[pz, anchor=north, font=\large] (pr) {Proto i naše $\underset{*}{\text{řada}}$ KONVERGUJE};
+\end{tikzpicture}
+\]
+
+\newpage
+% ============================================================= 2. list
+{\large Urči obor konvergence}
+
+% ------------------------------------------------------------- a)
+\[
+\hspace*{-\mathindent}\textbf{a)}\quad \sum_{n=1}^{\infty}n^2x^n
+\]
+1.\ střed $x_0=0$
+
+2.\ poloměr \
+$\displaystyle r = \li\frac{a_n}{a_{n+1}} = \li\frac{n^2}{(n+1)^2} = \li\frac{n^2}{n^2+2n+1}
+= \li\frac{\cancel{n^2}}{\cancel{n^2}} = \dvoj{1}$
+
+3.\ obor konvergence pro \ $x\in(0-1,\,0+1) = \tm{a1}{(}-1,1\tm{a2}{)}\ \ = \tm{a3}{\dvojc{(}}-1,\ 1\tm{a4}{\dvojc{)}}$
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, font=\small] at ([yshift=-7pt]a1.south) {?};
+\node[pz, font=\small] at ([yshift=-7pt]a2.south) {?};
+\end{tikzpicture}
+
+\medskip
+\fbox{$x=-1$}:\quad $\displaystyle\sum_{n=1}^{\infty}n^2\cdot(-1)^n = \underset{\text{\small LEIBNIZOVO}}{\text{Alternující}}
+\ \Rightarrow\ \tm{ne}{\li n^2\ne0}$
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, anchor=north west] (r1) at ([xshift=0.35cm, yshift=0.1cm]ne.south east) {Řada DIVERGUJE};
+\draw[thin] ([xshift=-0.1cm, yshift=4pt]ne.south east) |- (r1.west);
+\end{tikzpicture}
+
+\bigskip
+\fbox{$x=1$}:\quad $\displaystyle\sum_{n=1}^{\infty}n^2$ \ $\Rightarrow$\ neplatí nutná podmínka konvergence \ $\Rightarrow$\
+\tikz[remember picture, baseline=(r2.base)]\node[inner sep=1pt] (r2) {řada diverguje};
+\begin{tikzpicture}[remember picture, overlay]
+\draw[sipr, thin] (r1.north) to[out=80, in=-80] ([yshift=-9pt]a3.south);
+\draw[sipr, thin] (r2.east) to[out=30, in=-60] ([yshift=-9pt]a4.south);
+\end{tikzpicture}
+
+\bigskip\medskip
+% ------------------------------------------------------------- b)
+\[
+\hspace*{-\mathindent}\textbf{b)}\quad \sum_{n=1}^{\infty}\frac{(x-2)^n}{\ln(n+2)} = \sum_{n=1}^{\infty}\frac{1}{\ln(n+2)}\cdot(x-2)^n
+\]
+1.\ střed $x_0=2$
+
+2.\ poloměr:
+\begin{align*}
+r &= \li\frac{a_n}{a_{n+1}} = \li\frac{\dfrac{1}{\ln(n+2)}}{\dfrac{1}{\ln(n+1+2)}}
+= \li\frac{\dfrac{1}{\ln(n+2)}}{\dfrac{1}{\ln(n+3)}} =\\[0.4em]
+&= \li\frac{\ln(n+3)}{\ln(n+2)} = \tm{lp}{\frac{\ln\infty}{\ln\infty}} = \left[\frac\infty\infty\right] \overset{\text{L.P.}}{=}
+\li\frac{\frac{1}{n+3}}{\frac{1}{n+2}} =\\[1.6em]
+&= \li\frac{n+2}{n+3} = \li\frac nn = \dvoj{1}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=north, inner sep=0pt] at ([xshift=1.9cm, yshift=-4pt]lp.south) {\nacrt{l}{}};
+\end{tikzpicture}
+\end{align*}
+
+3.\ obor konvergence \ $x\in(2-1,\,2+1) = \tm{b1}{(}1,3\tm{b2}{)} = \tm{b3}{\dvojc{\langle}}1,3\tm{b4}{\dvojc{)}}$
+\begin{tikzpicture}[remember picture, overlay]
+\node[pz, font=\small] at ([yshift=-7pt]b1.south) {?};
+\node[pz, font=\small] at ([yshift=-7pt]b2.south) {?};
+\end{tikzpicture}
+
+\medskip
+\fbox{$x=1$}:\quad $\displaystyle\sum_{n=1}^{\infty}\frac{1}{\ln(n+2)}(-1)^n \ \longrightarrow\ $ LEIBNIZ:\quad
+$\displaystyle\li\frac{1}{\ln(n+2)} = \frac1\infty = \dvoj{0}$\ \ $\checkmark$
+\tikz[remember picture, baseline=(kv.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt, red!75!black] (kv) {KONV};
+
+\medskip
+\fbox{$x=3$}:\quad $\displaystyle\sum\frac{1}{\ln(n+2)}1^n \ \longrightarrow\ $ Srovnávací \ $\frac1n$ DIVERG.\quad
+$\begin{array}[t]{l}
+\displaystyle\frac1n<\frac{1}{\ln(n+2)}\quad\Big/\cdot n\ln(n+2)\\[8pt]
+\ln(n+2)<n \ \text{platí} \ \Rightarrow\ \displaystyle\sum\frac{1}{\ln(n+2)}
+\end{array}$
+\tikz[remember picture, baseline=(dv.base)]\node[draw=red!75!black, ellipse, inner sep=0.5pt, red!75!black] (dv) {DIV};
+\begin{tikzpicture}[remember picture, overlay]
+\draw[sipr, thin] (kv.north) .. controls +(0,0.5) and +(1.6,-0.15) .. ([yshift=-9pt]b3.south);
+\draw[sipr, thin] (dv.north) to[out=70, in=-20] ([xshift=2pt, yshift=-9pt]b4.south east);
+\end{tikzpicture}
+
+\end{document}
